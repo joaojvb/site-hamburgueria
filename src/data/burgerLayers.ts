@@ -3,6 +3,26 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+export interface LayerVideoSlice {
+  /**
+   * Posição vertical (object-position Y) para recortar a faixa correspondente
+   * no vídeo 3D explodido (/assets/ingredients/burger-3d-exploded.mp4)
+   */
+  objectPositionY: string;
+  /**
+   * Escala do vídeo dentro do recorte da camada
+   */
+  scale: number;
+  /**
+   * Tempo inicial do loop em segundos (trecho em que os ingredientes flutuam em 3D no fundo preto)
+   */
+  loopStart: number;
+  /**
+   * Tempo final do loop em segundos
+   */
+  loopEnd: number;
+}
+
 export interface ScrollytellingLayer {
   id: string;
   index: number;
@@ -20,9 +40,30 @@ export interface ScrollytellingLayer {
   };
   /**
    * Caminho do PNG transparente de alta definição (8K packshot extraído).
-   * Pode ser substituído por qualquer outra URL PNG transparente.
    */
   pngUrl: string;
+  /**
+   * Caminho de vídeo loop (MP4 ou WebM transparente / fundo preto com mix-blend-mode: screen)
+   * onde o ingrediente gira em 3D, derrete ou fumega em câmera lenta.
+   */
+  videoUrl?: string;
+  /**
+   * Configuração de recorte vertical quando utiliza o vídeo mestre 3D explodido.
+   * Caso você forneça um vídeo dedicado apenas daquele ingrediente, basta omitir videoSlice.
+   */
+  videoSlice?: LayerVideoSlice;
+  /**
+   * Caminho opcional para malha 3D (.glb) do ingrediente.
+   */
+  glbUrl?: string;
+  /**
+   * Efeito de partículas 3D específico da camada:
+   * - 'steam': vapor e fumaça subindo da carne grelhada (camada 5)
+   * - 'dewdrops': gotas de frescor brilhando na cebola e alface (camadas 2 e 3)
+   * - 'molten': brilho quente de cheddar derretendo (camada 4)
+   * - 'smoke': brasa e defumação de macieira no bacon (camada 6)
+   */
+  particleEffect?: 'steam' | 'dewdrops' | 'molten' | 'smoke' | 'none';
   /**
    * Posição vertical (em px) quando o hambúrguer está fechado no topo (scroll = 0)
    */
@@ -41,6 +82,8 @@ export interface ScrollytellingLayer {
   explodedRotate: number;
 }
 
+export const BURGER_3D_EXPLODED_VIDEO = '/assets/ingredients/burger-3d-exploded.mp4';
+
 export const BURGER_ANATOMY_LAYERS: ScrollytellingLayer[] = [
   {
     id: 'layer-top-bun',
@@ -58,6 +101,14 @@ export const BURGER_ANATOMY_LAYERS: ScrollytellingLayer[] = [
       keyFlavor: 'Mel Silvestre, Cacau & Fubá',
     },
     pngUrl: '/assets/ingredients/layer-01-top-bun.png',
+    videoUrl: BURGER_3D_EXPLODED_VIDEO,
+    videoSlice: {
+      objectPositionY: '14%',
+      scale: 2.35,
+      loopStart: 2.8,
+      loopEnd: 5.0,
+    },
+    particleEffect: 'none',
     closedY: -102,
     explodedY: -232,
     widthPercent: 95,
@@ -79,6 +130,14 @@ export const BURGER_ANATOMY_LAYERS: ScrollytellingLayer[] = [
       keyFlavor: 'Doçura viva e crocância gelada',
     },
     pngUrl: '/assets/ingredients/layer-02-onion.png',
+    videoUrl: BURGER_3D_EXPLODED_VIDEO,
+    videoSlice: {
+      objectPositionY: '29%',
+      scale: 2.6,
+      loopStart: 2.8,
+      loopEnd: 5.0,
+    },
+    particleEffect: 'dewdrops',
     closedY: -54,
     explodedY: -152,
     widthPercent: 86,
@@ -100,6 +159,14 @@ export const BURGER_ANATOMY_LAYERS: ScrollytellingLayer[] = [
       keyFlavor: 'Frescor herbal e quebra crocante',
     },
     pngUrl: '/assets/ingredients/layer-03-lettuce.png',
+    videoUrl: BURGER_3D_EXPLODED_VIDEO,
+    videoSlice: {
+      objectPositionY: '77%',
+      scale: 2.45,
+      loopStart: 2.8,
+      loopEnd: 5.0,
+    },
+    particleEffect: 'dewdrops',
     closedY: -18,
     explodedY: -76,
     widthPercent: 96,
@@ -121,6 +188,14 @@ export const BURGER_ANATOMY_LAYERS: ScrollytellingLayer[] = [
       keyFlavor: 'Cremosidade intensa e notas amanteigadas',
     },
     pngUrl: '/assets/ingredients/layer-04-cheddar.png',
+    videoUrl: BURGER_3D_EXPLODED_VIDEO,
+    videoSlice: {
+      objectPositionY: '48%',
+      scale: 2.4,
+      loopStart: 2.6,
+      loopEnd: 5.0,
+    },
+    particleEffect: 'molten',
     closedY: 16,
     explodedY: 4,
     widthPercent: 92,
@@ -142,6 +217,14 @@ export const BURGER_ANATOMY_LAYERS: ScrollytellingLayer[] = [
       keyFlavor: 'Umami intenso e defumação de brasa',
     },
     pngUrl: '/assets/ingredients/layer-05-patty.png',
+    videoUrl: BURGER_3D_EXPLODED_VIDEO,
+    videoSlice: {
+      objectPositionY: '63%',
+      scale: 2.4,
+      loopStart: 2.6,
+      loopEnd: 5.0,
+    },
+    particleEffect: 'steam',
     closedY: 48,
     explodedY: 86,
     widthPercent: 94,
@@ -163,6 +246,14 @@ export const BURGER_ANATOMY_LAYERS: ScrollytellingLayer[] = [
       keyFlavor: 'Defumado adocicado de macieira',
     },
     pngUrl: '/assets/ingredients/layer-06-bacon.png',
+    videoUrl: BURGER_3D_EXPLODED_VIDEO,
+    videoSlice: {
+      objectPositionY: '37%',
+      scale: 2.5,
+      loopStart: 2.8,
+      loopEnd: 5.0,
+    },
+    particleEffect: 'smoke',
     closedY: 82,
     explodedY: 164,
     widthPercent: 92,
@@ -184,6 +275,14 @@ export const BURGER_ANATOMY_LAYERS: ScrollytellingLayer[] = [
       keyFlavor: 'Tostado amanteigado e notas de cacau',
     },
     pngUrl: '/assets/ingredients/layer-07-bottom-bun.png',
+    videoUrl: BURGER_3D_EXPLODED_VIDEO,
+    videoSlice: {
+      objectPositionY: '88%',
+      scale: 2.35,
+      loopStart: 2.8,
+      loopEnd: 5.0,
+    },
+    particleEffect: 'none',
     closedY: 118,
     explodedY: 238,
     widthPercent: 93,

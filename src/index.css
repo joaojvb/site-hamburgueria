@@ -200,3 +200,106 @@ body {
 .ember-platter-hearth {
   animation: emberPlatterBreathe 3.2s ease-in-out infinite;
 }
+
+/* 3D Perspective & Continuous Axial Rotation */
+@keyframes spin3dContinuous {
+  0% {
+    transform: perspective(1000px) rotateX(12deg) rotateY(-18deg);
+  }
+  50% {
+    transform: perspective(1000px) rotateX(12deg) rotateY(18deg);
+  }
+  100% {
+    transform: perspective(1000px) rotateX(12deg) rotateY(-18deg);
+  }
+}
+
+@keyframes spin3dHoverFast {
+  0% {
+    transform: perspective(1000px) rotateX(10deg) rotateY(0deg) scale(1.15);
+  }
+  50% {
+    transform: perspective(1000px) rotateX(10deg) rotateY(180deg) scale(1.18);
+  }
+  100% {
+    transform: perspective(1000px) rotateX(10deg) rotateY(360deg) scale(1.15);
+  }
+}
+
+.layer-3d-idle {
+  animation: spin3dContinuous 9s ease-in-out infinite;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.layer-3d-hovered {
+  animation: spin3dHoverFast 2.8s linear infinite;
+  transform-style: preserve-3d;
+  will-change: transform;
+  filter: drop-shadow(0 0 32px rgba(245, 166, 35, 0.75)) drop-shadow(0 16px 28px rgba(232, 93, 26, 0.55)) brightness(1.18);
+}
+
+.layer-3d-dimmed {
+  animation-play-state: paused;
+  opacity: 0.35 !important;
+  filter: brightness(0.7) blur(0.6px);
+  transition: all 0.4s ease-out;
+}
+
+/* Steam & Smoke Particles for Patty (Layer 5) */
+@keyframes steamParticleRise {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.6);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.8;
+  }
+  80% {
+    opacity: 0.35;
+  }
+  100% {
+    transform: translate3d(var(--drift-x, 10px), -65px, 0) scale(1.5);
+    opacity: 0;
+  }
+}
+
+.steam-smoke-whisps {
+  animation: steamParticleRise var(--steam-duration, 2.4s) ease-out infinite;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.55) 0%, rgba(245, 166, 35, 0.25) 50%, transparent 80%);
+  filter: blur(5px);
+  pointer-events: none;
+}
+
+/* Dewdrops Glimmer on Salad / Onion (Layers 2 & 3) */
+@keyframes dewdropSparkle {
+  0%, 100% {
+    opacity: 0.25;
+    transform: scale(0.75);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.35);
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 10px rgba(52, 211, 153, 0.7));
+  }
+}
+
+.dewdrop-sparkle {
+  animation: dewdropSparkle var(--sparkle-duration, 1.8s) ease-in-out infinite;
+  background: radial-gradient(circle, #FFFFFF 0%, #D1FAE5 50%, rgba(52, 211, 153, 0.4) 80%, transparent 100%);
+  pointer-events: none;
+}
+
+/* Molten Pulsing Heat on Cheddar (Layer 4) */
+@keyframes cheddarMoltenPulse {
+  0%, 100% {
+    filter: drop-shadow(0 8px 16px rgba(245, 166, 35, 0.4)) brightness(1);
+  }
+  50% {
+    filter: drop-shadow(0 12px 28px rgba(232, 93, 26, 0.75)) drop-shadow(0 0 20px rgba(245, 166, 35, 0.6)) brightness(1.15);
+  }
+}
+
+.cheddar-molten-glow {
+  animation: cheddarMoltenPulse 2.6s ease-in-out infinite;
+}

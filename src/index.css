@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
 @theme {
-  --font-serif: "Fraunces", Georgia, serif;
-  --font-display: "Passion One", "Syne", "Fraunces", sans-serif;
+  --font-serif: "Cormorant Garamond", "Playfair Display", Georgia, serif;
+  --font-luxury: "Cormorant Garamond", Georgia, serif;
+  --font-display: "Playfair Display", "Cormorant Garamond", Georgia, serif;
+  --font-cinzel: "Cinzel", Georgia, serif;
   --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
   --color-charcoal-dark: #110D0B;
@@ -16,7 +18,7 @@
 
 :root {
   color-scheme: dark;
-  background-color: #110D0B;
+  background-color: #080504;
   color: #F4EFEA;
   font-family: var(--font-sans);
 }
@@ -24,7 +26,7 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: #110D0B;
+  background-color: #080504;
   color: #F4EFEA;
   overflow-x: hidden;
   selection-background-color: #E85D1A;
@@ -38,63 +40,79 @@ body {
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #110D0B;
+  background: #080504;
 }
 ::-webkit-scrollbar-thumb {
-  background: #2E221B;
-  border-radius: 4px;
+  background: #3A2418;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #E85D1A;
 }
 
-/* Glassmorphism helpers */
+/* Ultra-Premium Editorial Typography */
+.font-cinzel {
+  font-family: "Cinzel", Georgia, serif;
+}
+
+.font-editorial-serif {
+  font-family: "Cormorant Garamond", "Playfair Display", Georgia, serif;
+}
+
+.font-luxury {
+  font-family: "Cormorant Garamond", Georgia, serif;
+}
+
+.font-display {
+  font-family: "Playfair Display", Georgia, serif;
+}
+
+.text-molten-gold {
+  background: linear-gradient(180deg, #FFFFFF 0%, #FDF4E3 22%, #F5CE85 52%, #D49B42 82%, #A8651E 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 8px 24px rgba(212, 155, 66, 0.38));
+}
+
+.text-engraved-cream {
+  color: #F4EFEA;
+  text-shadow: 0 10px 35px rgba(0, 0, 0, 0.95), 0 2px 8px rgba(0, 0, 0, 0.85);
+}
+
+/* Architectural Hairlines & Chamfered Shapes (No Rounded-Rectangle Slop) */
+.hairline-gold-r {
+  background: linear-gradient(90deg, rgba(245, 166, 35, 0.65) 0%, rgba(232, 93, 26, 0.2) 70%, transparent 100%);
+}
+
+.hairline-gold-l {
+  background: linear-gradient(270deg, rgba(245, 166, 35, 0.65) 0%, rgba(232, 93, 26, 0.2) 70%, transparent 100%);
+}
+
+.hairline-gold-center {
+  background: linear-gradient(90deg, transparent 0%, rgba(245, 166, 35, 0.55) 50%, transparent 100%);
+}
+
+.clip-chamfer {
+  clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+}
+
+.mask-radial-fade {
+  -webkit-mask-image: radial-gradient(ellipse 88% 85% at 50% 50%, #000 55%, transparent 100%);
+  mask-image: radial-gradient(ellipse 88% 85% at 50% 50%, #000 55%, transparent 100%);
+}
+
+/* Legacy helpers kept minimal for CartDrawer compatibility */
 .glass-outback {
-  background: rgba(28, 21, 18, 0.75);
+  background: rgba(14, 9, 7, 0.82);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(245, 166, 35, 0.18);
+  border-left: 1px solid rgba(245, 166, 35, 0.3);
 }
 
-.glass-outback-hover:hover {
-  border-color: rgba(232, 93, 26, 0.45);
-  box-shadow: 0 10px 30px -10px rgba(232, 93, 26, 0.2);
-}
-
-/* Sky-Cookie Frosted Capsule & Obsidian Squircle Node */
-.frosted-sky-capsule {
-  background: rgba(255, 248, 240, 0.09);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 245, 235, 0.18);
-  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.65);
-}
-
-.obsidian-node-btn {
-  background: #0A0706;
-  border: 1px solid rgba(245, 166, 35, 0.28);
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-}
-
-.font-kinetic-display {
-  font-family: "Passion One", Impact, sans-serif;
-  letter-spacing: -0.02em;
-  line-height: 0.88;
-}
-
-/* Ambient fire glow */
-.ember-glow {
-  box-shadow: 0 0 35px -5px rgba(232, 93, 26, 0.35);
-}
-
-.gold-glow {
-  box-shadow: 0 0 35px -5px rgba(245, 166, 35, 0.25);
-}
-
-/* Rising Heat Distortion & Thermal Shimmer Keyframes for 'Monte no Fogo' */
+/* Rising Heat Distortion & Thermal Shimmer Keyframes */
 @keyframes heatWaveRise {
   0% {
     transform: translate3d(0, 16%, 0) scaleX(0.95) scaleY(0.98) skewX(-2deg);
@@ -136,6 +154,32 @@ body {
     opacity: 0.92;
     transform: scaleX(1.05);
   }
+}
+
+@keyframes grillSparkRise {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.7);
+    opacity: 0;
+  }
+  18% {
+    opacity: 0.95;
+  }
+  75% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate3d(var(--spark-drift, 20px), -72vh, 0) scale(0.2);
+    opacity: 0;
+  }
+}
+
+.grill-ember-spark {
+  background: radial-gradient(circle, #FFF3D1 0%, #F5A623 45%, #E85D1A 80%, transparent 100%);
+  box-shadow: 0 0 10px 2px rgba(232, 93, 26, 0.85), 0 0 20px 4px rgba(245, 166, 35, 0.45);
+  animation-name: grillSparkRise;
+  animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  animation-iteration-count: infinite;
+  pointer-events: none;
 }
 
 .heat-shimmer-plume {

@@ -10,16 +10,19 @@ import { BurgerCustomizer } from './components/BurgerCustomizer.tsx';
 import { BentoGridMenu } from './components/BentoGridMenu.tsx';
 import { Footer } from './components/Footer.tsx';
 import { CartDrawer, CartItem } from './components/CartDrawer.tsx';
+import {
+  SequenceScrollBackground,
+  SequenceStageInfo,
+} from './components/SequenceScrollBackground.tsx';
 import { MenuItem } from './data/menuItems.ts';
 import { IngredientItem, calculateBurgerStats } from './utils/burgerLogic.ts';
 
 export default function App() {
   const [cartItems, setCartItems] = useState<CartItem[]>([
-    // Seed with initial item so the comanda is previewable right away
     {
       id: 'outland-blooming-seed',
       name: 'The Outland Blooming Burger',
-      price: 54.90,
+      price: 54.9,
       quantity: 1,
       weightGrams: 480,
       calories: 980,
@@ -27,10 +30,17 @@ export default function App() {
     },
   ]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [stageInfo, setStageInfo] = useState<SequenceStageInfo>({
+    stageNumber: 1,
+    id: 'facade',
+    label: 'Estágio 01 · Fachada Outland',
+    subtitle: 'Entrada Principal · Aproximando da Porta',
+    progress: 0,
+  });
 
   const totalCartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
-  // Add Bento Menu item to cart
+  // Add Menu item to cart
   const handleAddMenuItem = (item: MenuItem) => {
     setCartItems(prev => {
       const existing = prev.find(i => i.id === item.id);
@@ -108,21 +118,28 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#110D0B] text-[#F4EFEA] selection:bg-[#E85D1A] selection:text-white">
-      {/* Top Bar following Top Bar Contract */}
+    <div className="relative isolate min-h-screen bg-transparent text-[#F4EFEA] selection:bg-[#E85D1A] selection:text-white">
+      {/* BACKGROUND FIXO EM PLANO-SEQUÊNCIA (SCROLLYTELLING 4 ESTÁGIOS + VÍDEO FPV HABILITADO POR PADRÃO) */}
+      <SequenceScrollBackground
+        onStageChange={setStageInfo}
+        videoMode={true}
+      />
+
+      {/* Architectural Unboxed Top Bar */}
       <Navbar
         totalCartCount={totalCartCount}
         onOpenCart={() => setIsCartOpen(true)}
+        stageInfo={stageInfo}
       />
 
-      <main>
-        {/* SEÇÃO 1: HERO & SCROLLYTELLING (A Anatomia do Hambúrguer) */}
+      <main className="relative z-10">
+        {/* ESTÁGIOS 1, 2 E 3: ENTRADA NA FACHADA -> SALÃO -> HAMBÚRGUER DESCONSTRUÍDO NA GRELHA */}
         <BurgerScrollytelling onGoToBuilder={handleScrollToBuilder} />
 
-        {/* SEÇÃO 2: MONTADOR INTERATIVO 3D "MONTE NO FOGO" (Estilo Subway) */}
+        {/* ESTÁGIO 4: MONTADOR INTERATIVO 3D NA BANCADA RÚSTICA DO CHEF */}
         <BurgerCustomizer onAddToCart={handleAddCustomBurger} />
 
-        {/* SEÇÃO 3: CARDÁPIO DA CASA (BENTO GRID UI) */}
+        {/* CURADORIA DA CASA (GALERIA EDITORIAL ASSIMÉTRICA) */}
         <BentoGridMenu onAddToCart={handleAddMenuItem} />
       </main>
 

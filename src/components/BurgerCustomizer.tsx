@@ -19,11 +19,9 @@ import {
   Flame,
   Plus,
   Trash2,
-  CheckCircle2,
   RotateCcw,
   Sparkles,
-  ShoppingBag,
-  Zap,
+  ArrowUpRight,
 } from 'lucide-react';
 
 interface BurgerCustomizerProps {
@@ -39,7 +37,6 @@ export const BurgerCustomizer: React.FC<BurgerCustomizerProps> = ({ onAddToCart 
   const baseBun = BUILDER_INGREDIENTS.find(i => i.isBase)!;
   const topBun = BUILDER_INGREDIENTS.find(i => i.isTopBun)!;
 
-  // Starts with only the Bottom Bun on the rustic wooden platter as specified in the prompt
   const [currentLayers, setCurrentLayers] = useState<IngredientItem[]>([baseBun]);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [isSmashed, setIsSmashed] = useState<boolean>(false);
@@ -76,7 +73,7 @@ export const BurgerCustomizer: React.FC<BurgerCustomizerProps> = ({ onAddToCart 
 
   const handleRemoveLayer = (indexToRemove: number) => {
     if (indexToRemove === 0 && currentLayers[0]?.isBase) {
-      showToast('O Pão Australiano Base sustenta o lanche no prato rústico!');
+      showToast('O Pão Australiano Base sustenta o lanche na tábua rústica do chef!');
       return;
     }
     setCurrentLayers(prev => prev.filter((_, idx) => idx !== indexToRemove));
@@ -86,7 +83,7 @@ export const BurgerCustomizer: React.FC<BurgerCustomizerProps> = ({ onAddToCart 
   const handleClear = () => {
     setCurrentLayers([baseBun]);
     setIsSmashed(false);
-    showToast('Prato limpo! Comece a empilhar seus ingredientes no fogo.');
+    showToast('Tábua limpa! Comece a empilhar seus ingredientes no fogo.');
   };
 
   const handleLoadFullHouseRecipe = () => {
@@ -107,7 +104,7 @@ export const BurgerCustomizer: React.FC<BurgerCustomizerProps> = ({ onAddToCart 
     ]);
     setIsSmashed(true);
     setBurstCounter(prev => prev + 1);
-    showToast('As 7 camadas clássicas do Outland foram empilhadas!');
+    showToast('As 7 camadas clássicas do Outland foram empilhadas na tábua!');
   };
 
   const handleCloseBurger = () => {
@@ -122,7 +119,7 @@ export const BurgerCustomizer: React.FC<BurgerCustomizerProps> = ({ onAddToCart 
     ]);
     setIsSmashed(true);
     setBurstCounter(prev => prev + 1);
-    showToast('SMASH! Pão Australiano Topo colocado com impacto na brasa!');
+    showToast('SMASH! Pão Australiano Topo colocado com impacto na tábua do chef!');
   };
 
   const handleFinalizeOrder = () => {
@@ -149,7 +146,6 @@ export const BurgerCustomizer: React.FC<BurgerCustomizerProps> = ({ onAddToCart 
     }
   };
 
-  // Selectable ingredients on the right panel (excluding base bun which is already on the plate)
   const selectableIngredients = BUILDER_INGREDIENTS.filter(item => {
     if (item.isBase) return false;
     if (selectedCategory === 'all') return true;
@@ -159,17 +155,19 @@ export const BurgerCustomizer: React.FC<BurgerCustomizerProps> = ({ onAddToCart 
   return (
     <section
       id="monte-no-fogo"
-      className="relative py-24 px-4 sm:px-8 bg-[#110D0B] border-t border-[#F5A623]/15 text-[#F4EFEA] overflow-hidden"
+      className="relative py-28 px-6 sm:px-14 bg-transparent text-[#F4EFEA] overflow-hidden"
     >
-      {/* Ambient Section-Wide Heat Glow & Rising Ember Particles */}
+      {/* Sombra Gradiente Suave para Leitura Limpa sobre a Bancada Rústica do Chef */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            'linear-gradient(90deg, rgba(8,5,4,0.25) 0%, rgba(8,5,4,0.55) 48%, rgba(8,5,4,0.88) 100%)',
+        }}
+      />
+
+      {/* Partículas de Brasa Subindo no Ambiente */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div
-          className="heat-convection-aura absolute top-1/3 left-1/4 w-[620px] h-[620px] rounded-full blur-[140px]"
-          style={{
-            background: 'radial-gradient(circle, rgba(232,93,26,0.12) 0%, transparent 70%)',
-            '--heat-speed': `${heatProfile.shimmerSpeedSec}s`,
-          } as React.CSSProperties}
-        />
         <FireEmberCanvasOverlay
           variant="section"
           intensity={heatProfile.intensityLevel}
@@ -179,343 +177,354 @@ export const BurgerCustomizer: React.FC<BurgerCustomizerProps> = ({ onAddToCart 
         />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto">
-        {/* Section Header */}
-        <div className="mb-14 text-center max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 text-xs font-mono text-[#F5A623] uppercase tracking-[0.2em] mb-3">
-            <span>02 · Laboratório Interativo 3D</span>
-            <span aria-hidden="true">·</span>
-            <span className="text-[#E85D1A]">Física de Mola & Brasa Viva</span>
+      <div className="relative z-10 max-w-[1440px] mx-auto">
+        {/* Cabeçalho Editorial Assimétrico (Sem Caixas) */}
+        <div className="mb-16 flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-8 border-b border-[#F5A623]/25">
+          <div>
+            <div className="flex items-center gap-3 mb-3">
+              <span className="font-editorial-serif italic text-xl text-[#F5A623]">IV.</span>
+              <span className="w-10 h-[1px] bg-[#F5A623]/60" />
+              <span className="font-cinzel text-[11px] font-bold tracking-[0.34em] text-[#F5A623] uppercase">
+                Bancada Rústica do Chef · Mise-en-Place
+              </span>
+            </div>
+            <h2 className="flex flex-wrap items-baseline gap-x-4">
+              <span className="font-cinzel font-black text-3xl sm:text-5xl tracking-[0.14em] uppercase text-engraved-cream">
+                Monte na
+              </span>
+              <span className="font-editorial-serif italic font-black text-4xl sm:text-6xl text-molten-gold">
+                Tábua Viva
+              </span>
+            </h2>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-serif font-black tracking-tight text-[#F4EFEA] mb-4">
-            MONTE NO FOGO
-          </h2>
-          <p className="text-sm sm:text-base text-[#A39B95] font-sans leading-relaxed">
-            Comece pelo Pão Australiano Base sobre a tábua rústica. Clique nos ingredientes ao lado para vê-los cair entre fagulhas e ondas de calor da grelha e finalize com o impacto do Pão Topo.
+
+          <p className="max-w-md font-editorial-serif italic text-base sm:text-lg text-[#F4EFEA]/85 leading-relaxed drop-shadow-[0_4px_14px_rgba(0,0,0,0.95)]">
+            “Sobre o carvalho rústico aquecido pela brasa, empilhe cortes de Wagyu, cheddar inglês maturado e bacon de macieira.”
           </p>
         </div>
 
-        {/* 2-Column Split Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-          {/* ESQUERDA: Palco de Montagem 3D com Canvas de Fagulhas e Distorção Térmica (Col 1-6) */}
-          <div className="lg:col-span-6 flex flex-col">
-            <div className="relative flex-1 min-h-[620px] rounded-3xl glass-outback p-6 sm:p-8 flex flex-col justify-between overflow-hidden shadow-2xl">
-              {/* Concentrated Stage Canvas Overlay: Rising Heat Distortion & Glowing Embers */}
-              <FireEmberCanvasOverlay
-                variant="stage"
-                intensity={heatProfile.intensityLevel}
-                emberCount={heatProfile.emberCount}
-                shimmerSpeedSec={heatProfile.shimmerSpeedSec}
-                burstTrigger={burstCounter}
-              />
+        {/* Layout Aberto em 2 Colunas (Sem Caixas Arredondadas) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          {/* ESQUERDA: O Hambúrguer Diretamente sobre a Tábua da Bancada (Zero Bordas/Retângulos!) */}
+          <div className="lg:col-span-6 relative min-h-[580px] flex flex-col justify-between">
+            <FireEmberCanvasOverlay
+              variant="stage"
+              intensity={heatProfile.intensityLevel}
+              emberCount={heatProfile.emberCount}
+              shimmerSpeedSec={heatProfile.shimmerSpeedSec}
+              burstTrigger={burstCounter}
+            />
 
-              {/* Top Stage Info */}
-              <div className="relative z-20 flex items-center justify-between gap-4 border-b border-[#F5A623]/15 pb-4">
-                <div>
-                  <p className="text-xs font-mono text-[#F5A623] uppercase tracking-wider font-bold">
-                    Palco de Montagem 3D
-                  </p>
-                  <p className="text-[11px] text-[#A39B95] mt-0.5">
-                    Clique em qualquer camada empilhada para removê-la
-                  </p>
-                </div>
-                <div className="flex items-center gap-2.5 text-xs font-mono tabular-nums">
-                  <span className="inline-flex items-center gap-1 text-[#F5A623]">
-                    <Flame className="w-3.5 h-3.5 text-[#E85D1A] fill-[#E85D1A]" />
-                    <span>{heatProfile.grillTempCelsius}°C</span>
-                  </span>
-                  <span className="text-white/20" aria-hidden="true">·</span>
-                  <span className="text-[#E85D1A] font-bold">
-                    {currentLayers.length} {currentLayers.length === 1 ? 'camada' : 'camadas'}
-                  </span>
-                </div>
-              </div>
-
-              {/* Smash Impact Ring Animation */}
-              <AnimatePresence>
-                {isSmashed && (
-                  <motion.div
-                    key="smash-ring"
-                    initial={{ scale: 0.6, opacity: 0.9 }}
-                    animate={{ scale: 1.75, opacity: 0 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.65, ease: 'easeOut' }}
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full border-2 border-[#F5A623] pointer-events-none z-30"
-                  />
-                )}
-              </AnimatePresence>
-
-              {/* Center 3D Burger Stack over Rustic Wooden Platter */}
-              <div className="relative flex-1 flex flex-col items-center justify-end py-8 z-10">
-                <motion.div
-                  animate={
-                    isSmashed
-                      ? { scaleY: [1, 0.88, 1.03, 0.97], y: [0, 12, -4, 0] }
-                      : { scaleY: 1, y: 0 }
-                  }
-                  transition={{ duration: 0.45, ease: 'easeOut' }}
-                  className="relative flex flex-col-reverse items-center justify-start w-full max-w-[360px]"
-                >
-                  <AnimatePresence initial={false}>
-                    {currentLayers.map((layer, index) => {
-                      // Overlap calculation: when smashed, layers compress more tightly together
-                      const overlapMargin =
-                        index === 0 ? 0 : isSmashed ? -64 : -50;
-
-                      return (
-                        <motion.div
-                          key={(layer as any)._stackId || `${layer.id}-${index}`}
-                          initial={{ y: -220, opacity: 0, scale: 0.82, rotate: -4 }}
-                          animate={{
-                            y: 0,
-                            opacity: 1,
-                            scale: 1,
-                            rotate: 0,
-                          }}
-                          exit={{
-                            y: -90,
-                            opacity: 0,
-                            scale: 0.75,
-                            transition: { duration: 0.18 },
-                          }}
-                          transition={{
-                            type: 'spring',
-                            stiffness: 260,
-                            damping: 15,
-                            mass: 0.9,
-                          }}
-                          onClick={() => handleRemoveLayer(index)}
-                          style={{
-                            marginBottom: `${overlapMargin}px`,
-                            zIndex: 10 + index,
-                          }}
-                          className="relative w-full cursor-pointer group select-none"
-                          title={
-                            layer.isBase
-                              ? 'Pão Australiano Base (Fundação do Lanche)'
-                              : `Clique para remover ${layer.name}`
-                          }
-                        >
-                          <BurgerLayerGraphic
-                            layerId={layer.id}
-                            pngUrl={layer.pngUrl}
-                            altText={layer.name}
-                            widthPercent={layer.isTopBun ? 95 : 92}
-                          />
-
-                          {/* Hover Remove Indicator */}
-                          {!layer.isBase && (
-                            <div className="absolute right-0 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-[#110D0B]/90 px-2.5 py-1 rounded-lg border border-[#E85D1A]/50 text-[10px] font-mono text-[#F4EFEA] flex items-center gap-1 shadow-xl pointer-events-none">
-                              <Trash2 className="w-3 h-3 text-[#E85D1A]" />
-                              <span>Remover {layer.name.split(' ')[0]}</span>
-                            </div>
-                          )}
-                        </motion.div>
-                      );
-                    })}
-                  </AnimatePresence>
-                </motion.div>
-
-                {/* Rustic Wooden Platter Base */}
-                <div className="relative mt-2 w-full max-w-[420px] z-0 flex flex-col items-center">
-                  <div className="w-full h-[36px] rounded-2xl bg-gradient-to-r from-[#24160E] via-[#3A2418] to-[#24160E] border-t-2 border-[#633E29] shadow-[0_20px_35px_rgba(0,0,0,0.95)] flex items-center justify-between px-6">
-                    <span className="text-[10px] font-mono tracking-[0.2em] text-[#A39B95] uppercase">
-                      Prato de Madeira Rústica
-                    </span>
-                    <span className="text-[10px] font-mono text-[#F5A623] font-bold tracking-widest">
-                      {heatProfile.label.toUpperCase()}
-                    </span>
-                  </div>
-                  <div className="w-[88%] h-3 rounded-b-xl bg-[#160D08] border-b border-[#3A2418]/50" />
-                </div>
-              </div>
-
-              {/* Bottom Stage Action Bar */}
-              <div className="relative z-20 flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-[#F5A623]/15">
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={handleClear}
-                    className="px-3.5 py-2 rounded-xl bg-black/50 hover:bg-black/70 border border-white/10 text-xs font-mono text-[#A39B95] hover:text-[#F4EFEA] flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
-                  >
-                    <RotateCcw className="w-3.5 h-3.5" />
-                    <span>Limpar Tudo</span>
-                  </button>
-                  <button
-                    onClick={handleLoadFullHouseRecipe}
-                    className="px-3.5 py-2 rounded-xl bg-[#F5A623]/15 hover:bg-[#F5A623]/25 border border-[#F5A623]/30 text-xs font-mono text-[#F5A623] flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
-                  >
-                    <Sparkles className="w-3.5 h-3.5" />
-                    <span>Montar Clássico 7 Camadas</span>
-                  </button>
-                </div>
-
-                {/* Fechar Lanche (Colocar Pão Topo) Smash Button */}
-                <button
-                  onClick={handleCloseBurger}
-                  disabled={stats.isClosed}
-                  className={`px-4 py-2.5 rounded-xl text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
-                    stats.isClosed
-                      ? 'bg-emerald-950/60 text-emerald-300 border border-emerald-500/30 cursor-default'
-                      : 'bg-gradient-to-r from-[#E85D1A] to-[#F5A623] text-[#110D0B] hover:opacity-95 shadow-lg shadow-[#E85D1A]/25'
-                  }`}
-                >
-                  {stats.isClosed ? (
-                    <>
-                      <CheckCircle2 className="w-4 h-4" />
-                      <span>Lanche Fechado no Topo</span>
-                    </>
-                  ) : (
-                    <>
-                      <Zap className="w-4 h-4" />
-                      <span>Fechar Lanche (Colocar Pão Topo)</span>
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* DIREITA: Painel de Controle de Ingredientes e Comanda (Col 7-12) */}
-          <div className="lg:col-span-6 flex flex-col gap-6">
-            {/* Painel de Resumo (Deconstructed Branding): Peso, Calorias e Preço em Tempo Real */}
-            <div className="p-6 sm:p-7 rounded-3xl glass-outback shadow-xl">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2 text-xs font-mono text-[#F5A623] uppercase tracking-wider">
-                  <span>Painel de Resumo</span>
-                  <span aria-hidden="true">·</span>
-                  <span className="text-[#E85D1A]">Deconstructed Branding</span>
-                </div>
-                <span className="text-xs font-mono text-[#A39B95] tabular-nums">
-                  {stats.isClosed ? 'Pronto para a Grelha' : 'Em Montagem'}
+            {/* Linha Editorial Superior do Palco */}
+            <div className="relative z-20 flex items-center justify-between pb-3 border-b border-[#F5A623]/25">
+              <span className="font-cinzel text-[11px] font-bold tracking-[0.26em] text-[#F5A623] uppercase">
+                Tábua de Carvalho · Clique na camada para retirar
+              </span>
+              <div className="flex items-center gap-3 font-editorial-serif italic text-sm">
+                <span className="inline-flex items-center gap-1.5 text-[#F5A623]">
+                  <Flame className="w-3.5 h-3.5 text-[#E85D1A] fill-[#E85D1A]" />
+                  <span>{heatProfile.grillTempCelsius}°C</span>
+                </span>
+                <span className="text-[#F5A623]/40">◆</span>
+                <span className="text-[#F4EFEA] font-bold">
+                  {currentLayers.length} {currentLayers.length === 1 ? 'camada' : 'camadas'}
                 </span>
               </div>
+            </div>
 
-              <div className="grid grid-cols-3 gap-3 p-4 rounded-2xl bg-[#110D0B]/90 border border-[#F5A623]/20 mb-5">
-                <div>
-                  <p className="text-[11px] font-mono text-[#A39B95] uppercase">Peso Total</p>
-                  <p className="text-2xl sm:text-3xl font-mono font-bold text-[#F4EFEA] tabular-nums mt-0.5">
-                    {stats.totalWeightGrams}
-                    <span className="text-xs font-normal text-[#A39B95] ml-1">g</span>
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[11px] font-mono text-[#A39B95] uppercase">Calorias</p>
-                  <p className="text-2xl sm:text-3xl font-mono font-bold text-[#F5A623] tabular-nums mt-0.5">
-                    {stats.totalCalories}
-                    <span className="text-xs font-normal text-[#A39B95] ml-1">kcal</span>
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[11px] font-mono text-[#A39B95] uppercase">Preço Atual</p>
-                  <p className="text-2xl sm:text-3xl font-mono font-bold text-[#E85D1A] tabular-nums mt-0.5">
-                    {formatCurrencyBRL(stats.totalPrice)}
-                  </p>
-                </div>
+            {/* Anel de Impacto Smash */}
+            <AnimatePresence>
+              {isSmashed && (
+                <motion.div
+                  key="smash-ring"
+                  initial={{ scale: 0.6, opacity: 0.9 }}
+                  animate={{ scale: 1.75, opacity: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.65, ease: 'easeOut' }}
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full border border-[#F5A623] pointer-events-none z-30"
+                />
+              )}
+            </AnimatePresence>
+
+            {/* Pilha 3D Flutuando Livremente sobre a Tábua do Background */}
+            <div className="relative flex-1 flex flex-col items-center justify-end py-12 z-10">
+              <motion.div
+                animate={
+                  isSmashed
+                    ? { scaleY: [1, 0.88, 1.03, 0.97], y: [0, 12, -4, 0] }
+                    : { scaleY: 1, y: 0 }
+                }
+                transition={{ duration: 0.45, ease: 'easeOut' }}
+                className="relative flex flex-col-reverse items-center justify-start w-full max-w-[360px]"
+              >
+                <AnimatePresence initial={false}>
+                  {currentLayers.map((layer, index) => {
+                    const overlapMargin = index === 0 ? 0 : isSmashed ? -64 : -50;
+
+                    return (
+                      <motion.div
+                        key={(layer as any)._stackId || `${layer.id}-${index}`}
+                        initial={{ y: -220, opacity: 0, scale: 0.82, rotate: -4 }}
+                        animate={{
+                          y: 0,
+                          opacity: 1,
+                          scale: 1,
+                          rotate: 0,
+                        }}
+                        exit={{
+                          y: -90,
+                          opacity: 0,
+                          scale: 0.75,
+                          transition: { duration: 0.18 },
+                        }}
+                        transition={{
+                          type: 'spring',
+                          stiffness: 260,
+                          damping: 15,
+                          mass: 0.9,
+                        }}
+                        onClick={() => handleRemoveLayer(index)}
+                        style={{
+                          marginBottom: `${overlapMargin}px`,
+                          zIndex: 10 + index,
+                        }}
+                        className="relative w-full cursor-pointer group select-none"
+                        title={
+                          layer.isBase
+                            ? 'Pão Australiano Base (Fundação do Lanche)'
+                            : `Clique para remover ${layer.name}`
+                        }
+                      >
+                        <BurgerLayerGraphic
+                          layerId={layer.id}
+                          pngUrl={layer.pngUrl}
+                          altText={layer.name}
+                          widthPercent={layer.isTopBun ? 95 : 92}
+                        />
+
+                        {/* Indicador Tipográfico Limpo de Remoção */}
+                        {!layer.isBase && (
+                          <div className="absolute right-0 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2 pointer-events-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.95)]">
+                            <span className="w-6 h-[1px] bg-[#E85D1A]" />
+                            <Trash2 className="w-3.5 h-3.5 text-[#E85D1A]" />
+                            <span className="font-cinzel text-[10px] font-bold tracking-[0.2em] uppercase text-[#F4EFEA]">
+                              Retirar
+                            </span>
+                          </div>
+                        )}
+                      </motion.div>
+                    );
+                  })}
+                </AnimatePresence>
+              </motion.div>
+
+              {/* Sombra de Contato Direta sobre a Tábua de Madeira */}
+              <div
+                className="w-[78%] h-8 rounded-full blur-lg -mt-2"
+                style={{
+                  background:
+                    'radial-gradient(ellipse at center, rgba(0,0,0,0.95) 0%, rgba(232,93,26,0.32) 65%, transparent 100%)',
+                }}
+              />
+            </div>
+
+            {/* Ações Editoriais Abertas (Sem Botões Caixote) */}
+            <div className="relative z-20 flex flex-wrap items-center justify-between gap-6 pt-4 border-t border-[#F5A623]/25">
+              <div className="flex items-center gap-6">
+                <button
+                  onClick={handleClear}
+                  className="group inline-flex items-center gap-2 font-cinzel text-[11px] font-semibold tracking-[0.22em] uppercase text-[#A39B95] hover:text-[#F4EFEA] transition-colors cursor-pointer"
+                >
+                  <RotateCcw className="w-3.5 h-3.5 text-[#E85D1A] group-hover:-rotate-45 transition-transform" />
+                  <span>Reiniciar Tábua</span>
+                </button>
+
+                <span className="text-[8px] text-[#F5A623]/40">◆</span>
+
+                <button
+                  onClick={handleLoadFullHouseRecipe}
+                  className="group inline-flex items-center gap-2 font-cinzel text-[11px] font-semibold tracking-[0.22em] uppercase text-[#F5A623] hover:text-[#E85D1A] transition-colors cursor-pointer"
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Receita 7 Camadas</span>
+                </button>
               </div>
 
               <button
-                onClick={handleFinalizeOrder}
-                className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-[#E85D1A] to-[#F5A623] text-[#110D0B] font-bold font-mono text-xs uppercase tracking-wider flex items-center justify-center gap-2 hover:opacity-95 transition-opacity shadow-lg shadow-[#E85D1A]/25 cursor-pointer"
+                onClick={handleCloseBurger}
+                disabled={stats.isClosed}
+                className={`group inline-flex items-center gap-3 py-1 font-cinzel text-[11px] font-bold tracking-[0.24em] uppercase transition-all cursor-pointer ${
+                  stats.isClosed
+                    ? 'text-emerald-400 cursor-default'
+                    : 'text-[#F4EFEA] hover:text-[#F5A623]'
+                }`}
               >
-                <ShoppingBag className="w-4 h-4" />
-                <span>Adicionar Meu Lanche à Comanda</span>
+                <span>
+                  {stats.isClosed ? '◆ Lanche Selado no Topo' : 'Selar com Pão Topo'}
+                </span>
+                {!stats.isClosed && (
+                  <span className="w-8 h-[1px] bg-[#E85D1A] group-hover:w-12 transition-all" />
+                )}
               </button>
             </div>
+          </div>
 
-            {/* Painel de Ingredientes com Miniaturas PNG Reais */}
-            <div className="p-6 sm:p-7 rounded-3xl glass-outback shadow-xl flex-1 flex flex-col">
-              {/* Filter Tabs */}
-              <div className="flex items-center gap-1.5 overflow-x-auto pb-3 mb-5 border-b border-[#F5A623]/15">
-                {[
-                  { id: 'all', label: 'Todos Ingredientes' },
-                  { id: 'meat', label: 'Carne Extra' },
-                  { id: 'cheese', label: 'Cheddar' },
-                  { id: 'bacon', label: 'Bacon' },
-                  { id: 'veggie', label: 'Salada & Cebola' },
-                  { id: 'sauce', label: 'Molho Outback' },
-                ].map(tab => (
+          {/* DIREITA: Caderno de Mise-en-Place do Chef (Linhas Finas, Sem Caixas!) */}
+          <div className="lg:col-span-6 lg:border-l lg:border-[#F5A623]/30 lg:pl-12 flex flex-col gap-10">
+            {/* Telemetria Gastronômica em Serif Italic */}
+            <div className="grid grid-cols-3 gap-6 pb-8 border-b border-[#F5A623]/25">
+              <div>
+                <span className="font-cinzel text-[10px] tracking-[0.28em] text-[#A39B95] uppercase block">
+                  Peso na Balança
+                </span>
+                <p className="font-editorial-serif italic font-black text-3xl sm:text-4xl text-[#F4EFEA] tabular-nums mt-1">
+                  {stats.totalWeightGrams}
+                  <span className="text-base font-normal text-[#F5A623] ml-1">g</span>
+                </p>
+              </div>
+
+              <div className="border-l border-[#F5A623]/20 pl-6">
+                <span className="font-cinzel text-[10px] tracking-[0.28em] text-[#A39B95] uppercase block">
+                  Energia da Brasa
+                </span>
+                <p className="font-editorial-serif italic font-black text-3xl sm:text-4xl text-[#F5A623] tabular-nums mt-1">
+                  {stats.totalCalories}
+                  <span className="text-base font-normal text-[#A39B95] ml-1">kcal</span>
+                </p>
+              </div>
+
+              <div className="border-l border-[#F5A623]/20 pl-6">
+                <span className="font-cinzel text-[10px] tracking-[0.28em] text-[#A39B95] uppercase block">
+                  Valor do Corte
+                </span>
+                <p className="font-editorial-serif italic font-black text-3xl sm:text-4xl text-molten-gold tabular-nums mt-1">
+                  {formatCurrencyBRL(stats.totalPrice)}
+                </p>
+              </div>
+            </div>
+
+            {/* Navegação de Categorias em Linha Tipográfica */}
+            <div className="flex items-center gap-5 overflow-x-auto pb-2 border-b border-white/10">
+              {[
+                { id: 'all', label: 'Todos' },
+                { id: 'meat', label: 'Carnes' },
+                { id: 'cheese', label: 'Cheddar' },
+                { id: 'bacon', label: 'Defumados' },
+                { id: 'veggie', label: 'Horta' },
+                { id: 'sauce', label: 'Molhos' },
+              ].map((tab, idx) => (
+                <React.Fragment key={tab.id}>
+                  {idx > 0 && (
+                    <span className="text-[7px] text-[#F5A623]/40 select-none">◆</span>
+                  )}
                   <button
-                    key={tab.id}
                     onClick={() => setSelectedCategory(tab.id)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
+                    className={`relative py-1.5 font-cinzel text-[11px] tracking-[0.24em] uppercase whitespace-nowrap cursor-pointer transition-colors ${
                       selectedCategory === tab.id
-                        ? 'bg-[#E85D1A] text-[#110D0B] font-bold'
-                        : 'text-[#A39B95] hover:text-[#F4EFEA] hover:bg-white/5'
+                        ? 'text-[#F5A623] font-bold after:content-[""] after:absolute after:inset-x-0 after:bottom-0 after:h-[2px] after:bg-[#E85D1A]'
+                        : 'text-[#A39B95] hover:text-[#F4EFEA]'
                     }`}
                   >
                     {tab.label}
                   </button>
-                ))}
-              </div>
+                </React.Fragment>
+              ))}
+            </div>
 
-              {/* Ingredient Buttons Grid with Miniature PNG Previews */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                {selectableIngredients.map(item => {
-                  const count = currentLayers.filter(l => l.id === item.id).length;
+            {/* Lista Editorial de Ingredientes (Sem Caixas Retangulares!) */}
+            <div className="divide-y divide-white/10">
+              {selectableIngredients.map(item => {
+                const count = currentLayers.filter(l => l.id === item.id).length;
 
-                  return (
-                    <button
-                      key={item.id}
-                      onClick={() => handleAddIngredient(item)}
-                      aria-label={`Adicionar ${item.name}`}
-                      className="p-3.5 rounded-2xl bg-[#110D0B]/75 border border-[#F5A623]/15 hover:border-[#E85D1A]/60 transition-all flex items-center gap-3.5 text-left group cursor-pointer"
-                    >
-                      {/* Miniature Packshot PNG Preview */}
-                      <div className="w-16 h-14 rounded-xl bg-[#1C1512] border border-white/5 p-1.5 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                        {item.pngUrl ? (
-                          <img
-                            src={item.pngUrl}
-                            alt={item.name}
-                            className="max-w-full max-h-full object-contain filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]"
-                          />
-                        ) : (
-                          <Flame className="w-6 h-6 text-[#E85D1A]" />
-                        )}
-                      </div>
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => handleAddIngredient(item)}
+                    aria-label={`Adicionar ${item.name}`}
+                    className="w-full py-4 flex items-center gap-5 text-left group cursor-pointer transition-colors hover:bg-white/[0.02]"
+                  >
+                    {/* Packshot PNG Flutuante Sem Caixa */}
+                    <div className="w-16 h-12 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300">
+                      {item.pngUrl ? (
+                        <img
+                          src={item.pngUrl}
+                          alt={item.name}
+                          className="max-w-full max-h-full object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.95)]"
+                        />
+                      ) : (
+                        <Flame className="w-6 h-6 text-[#E85D1A]" />
+                      )}
+                    </div>
 
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between gap-1">
-                          <span className="text-xs font-serif font-bold text-[#F4EFEA] group-hover:text-[#F5A623] transition-colors truncate">
-                            {item.name}
-                          </span>
+                    {/* Nome, Linha Pontilhada e Preço em Estilo Cardápio Clássico */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-baseline justify-between gap-3">
+                        <span className="font-cinzel text-xs sm:text-sm font-bold tracking-[0.14em] uppercase text-[#F4EFEA] group-hover:text-[#F5A623] transition-colors">
+                          {item.name}
+                        </span>
+
+                        <span className="flex-1 border-b border-dotted border-white/20 mx-2 hidden sm:block" />
+
+                        <div className="flex items-baseline gap-2 shrink-0">
                           {count > 0 && (
-                            <span className="px-1.5 py-0.5 rounded bg-[#E85D1A] text-[#110D0B] font-mono text-[10px] font-bold shrink-0">
-                              {count}x
+                            <span className="font-cinzel text-[11px] font-bold text-[#E85D1A]">
+                              [{count}x]
                             </span>
                           )}
-                        </div>
-                        <p className="text-[11px] text-[#A39B95] truncate mt-0.5">
-                          {item.description}
-                        </p>
-                        <div className="flex items-center justify-between mt-2 font-mono text-[11px]">
-                          <span className="text-[#A39B95] tabular-nums">
-                            {item.weightGrams}g · {item.calories}kcal
-                          </span>
-                          <span className="text-[#F5A623] font-bold flex items-center gap-1 tabular-nums">
+                          <span className="font-editorial-serif italic text-base font-bold text-[#F5A623] tabular-nums">
                             +{formatCurrencyBRL(item.price)}
-                            <Plus className="w-3.5 h-3.5 text-[#E85D1A]" />
                           </span>
+                          <Plus className="w-3.5 h-3.5 text-[#E85D1A] group-hover:rotate-90 transition-transform" />
                         </div>
                       </div>
-                    </button>
-                  );
-                })}
-              </div>
+
+                      <div className="flex items-center justify-between mt-1">
+                        <p className="font-editorial-serif italic text-xs text-[#A39B95] truncate">
+                          {item.description}
+                        </p>
+                        <span className="font-mono text-[10px] text-[#A39B95]/70 tabular-nums shrink-0 ml-3">
+                          {item.weightGrams}g · {item.calories} kcal
+                        </span>
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
+
+            {/* Assinatura de Fechamento da Comanda (Dupla Linha de Latão, Sem Botão Retangular) */}
+            <button
+              onClick={handleFinalizeOrder}
+              className="group relative w-full py-5 border-y border-[#F5A623]/55 hover:border-[#E85D1A] flex items-center justify-between transition-all cursor-pointer"
+            >
+              <div className="flex items-center gap-3">
+                <span className="text-[#E85D1A]">◆</span>
+                <span className="font-cinzel text-xs sm:text-sm font-extrabold tracking-[0.28em] uppercase text-[#F4EFEA] group-hover:text-[#F5A623] transition-colors">
+                  Enviar Criação para a Comanda
+                </span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="font-editorial-serif italic text-lg font-bold text-[#F5A623]">
+                  {formatCurrencyBRL(stats.totalPrice)}
+                </span>
+                <span className="w-8 h-[1px] bg-[#E85D1A] group-hover:w-14 transition-all" />
+                <ArrowUpRight className="w-4 h-4 text-[#E85D1A] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </div>
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Floating Feedback Notification */}
+      {/* Notificação Editorial Minimalista */}
       <AnimatePresence>
         {notification && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="fixed bottom-6 right-6 z-50 px-4 py-3 rounded-2xl glass-outback border border-[#E85D1A] text-[#F4EFEA] font-sans text-xs font-medium shadow-2xl flex items-center gap-2"
+            className="fixed bottom-8 right-8 z-50 pl-5 pr-6 py-3 bg-[#0A0705]/95 backdrop-blur-xl border-l-2 border-[#E85D1A] text-[#F4EFEA] font-editorial-serif italic text-sm shadow-2xl flex items-center gap-3"
           >
-            <Flame className="w-4 h-4 text-[#E85D1A]" />
+            <Flame className="w-4 h-4 text-[#E85D1A] shrink-0" />
             <span>{notification}</span>
           </motion.div>
         )}

@@ -4,82 +4,93 @@
  */
 
 import React from 'react';
-import { Flame, LayoutGrid, ShoppingBag } from 'lucide-react';
+import { Flame } from 'lucide-react';
+import { SequenceStageInfo } from './SequenceScrollBackground.tsx';
 
 interface NavbarProps {
   totalCartCount: number;
   onOpenCart: () => void;
+  stageInfo?: SequenceStageInfo;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ totalCartCount, onOpenCart }) => {
+export const Navbar: React.FC<NavbarProps> = ({
+  totalCartCount,
+  onOpenCart,
+  stageInfo,
+}) => {
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 pointer-events-none px-5 sm:px-10 py-5">
-      <div className="max-w-[1400px] mx-auto flex items-center justify-between gap-6">
-        {/* Zone 1: Expressive Brand Wordmark (WildCrumb / Outland Luxury Style) */}
+    <header className="fixed top-0 left-0 right-0 z-50 pointer-events-none px-6 sm:px-14 pt-6 pb-4">
+      <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-8">
+        {/* Zone 1: Unboxed Engraved Editorial Wordmark */}
         <a
           href="#anatomia"
-          className="pointer-events-auto flex items-center gap-2.5 text-xl sm:text-2xl font-serif italic font-black tracking-tight text-[#F4EFEA] whitespace-nowrap shrink-0 group drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)]"
+          className="pointer-events-auto flex items-center gap-3.5 group"
         >
-          <span className="flex items-center justify-center w-8 h-8 rounded-xl bg-[#0A0706] border border-[#E85D1A]/50 text-[#E85D1A] group-hover:bg-[#E85D1A] group-hover:text-[#110D0B] transition-colors shadow-lg">
-            <Flame className="w-4 h-4 fill-current" />
-          </span>
-          <span className="not-italic font-serif font-black tracking-tight">
-            Outland<span className="text-[#F5A623] italic font-normal ml-0.5">Fire</span>
+          <Flame className="w-4 h-4 text-[#E85D1A] fill-[#E85D1A]/80 group-hover:scale-110 transition-transform drop-shadow-[0_0_12px_rgba(232,93,26,0.9)]" />
+          <div className="flex items-baseline gap-2">
+            <span className="font-cinzel font-extrabold text-lg sm:text-xl tracking-[0.26em] text-[#F4EFEA] drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]">
+              OUTLAND
+            </span>
+            <span className="font-editorial-serif italic font-normal text-base sm:text-lg text-[#F5A623] tracking-wide drop-shadow-[0_4px_14px_rgba(0,0,0,0.95)]">
+              Fire Grill
+            </span>
+          </div>
+          <span className="hidden lg:inline-block h-3.5 w-[1px] bg-[#F5A623]/35 mx-1" />
+          <span className="hidden lg:inline-block font-mono text-[10px] tracking-[0.22em] text-[#F4EFEA]/65 uppercase">
+            {stageInfo ? stageInfo.label : 'I · A Fachada'}
           </span>
         </a>
 
-        {/* Zone 2: Floating Frosted Dock Navigation (Sky Cookie 1:1 Aesthetic) */}
+        {/* Zone 2: Pure Typographic Navigation (Zero Boxes, Diamond Separators & Golden Underline) */}
         <nav
           aria-label="Navegação Principal"
-          className="pointer-events-auto hidden md:flex items-center gap-2"
+          className="pointer-events-auto hidden md:flex items-center gap-6"
         >
-          <a
-            href="#anatomia"
-            className="px-4 py-2.5 rounded-xl bg-[#090706] text-[#F4EFEA] border border-white/15 text-xs font-sans font-semibold flex items-center gap-2 shadow-xl hover:border-[#F5A623]/50 transition-all whitespace-nowrap shrink-0"
-          >
-            <LayoutGrid className="w-3.5 h-3.5 text-[#F5A623]" />
-            <span>Anatomia 3D</span>
-          </a>
-          <a
-            href="#monte-no-fogo"
-            className="px-4 py-2.5 rounded-xl frosted-sky-capsule text-xs font-sans font-medium text-[#F4EFEA]/90 hover:text-white hover:border-[#F5A623]/40 transition-all whitespace-nowrap shrink-0"
-          >
-            Monte no Fogo
-          </a>
-          <a
-            href="#cardapio"
-            className="px-4 py-2.5 rounded-xl frosted-sky-capsule text-xs font-sans font-medium text-[#F4EFEA]/90 hover:text-white hover:border-[#F5A623]/40 transition-all whitespace-nowrap shrink-0"
-          >
-            Clássicos
-          </a>
-          <a
-            href="#sobre"
-            className="px-4 py-2.5 rounded-xl frosted-sky-capsule text-xs font-sans font-medium text-[#F4EFEA]/90 hover:text-white hover:border-[#F5A623]/40 transition-all whitespace-nowrap shrink-0"
-          >
-            A Brasa
-          </a>
+          {[
+            { href: '#anatomia', label: 'A Travessia' },
+            { href: '#monte-no-fogo', label: 'Bancada do Chef' },
+            { href: '#cardapio', label: 'Clássicos' },
+            { href: '#sobre', label: 'A Brasa' },
+          ].map((item, idx) => (
+            <React.Fragment key={item.href}>
+              {idx > 0 && (
+                <span
+                  aria-hidden="true"
+                  className="text-[8px] text-[#F5A623]/55 select-none"
+                >
+                  ◆
+                </span>
+              )}
+              <a
+                href={item.href}
+                className="relative py-1 font-cinzel text-[11px] font-semibold tracking-[0.24em] uppercase text-[#F4EFEA]/85 hover:text-[#F5A623] transition-colors drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)] after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[1px] after:bg-gradient-to-r after:from-[#E85D1A] after:to-[#F5A623] hover:after:w-full after:transition-all after:duration-300"
+              >
+                {item.label}
+              </a>
+            </React.Fragment>
+          ))}
         </nav>
 
-        {/* Zone 3: Floating Action Dock + Obsidian Cart Button */}
-        <div className="pointer-events-auto flex items-center gap-2.5 shrink-0">
-          <div className="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-xl frosted-sky-capsule text-[11px] font-mono text-[#F4EFEA]/85">
-            <span className="w-2 h-2 rounded-full bg-[#E85D1A] animate-pulse" />
-            <span>BRASA 400°C</span>
-          </div>
-
+        {/* Zone 3: Unboxed Architectural Comanda Trigger */}
+        <div className="pointer-events-auto flex items-center gap-6 shrink-0">
           <button
             onClick={onOpenCart}
-            className="px-4 py-2.5 rounded-xl bg-[#090706] hover:bg-[#16100D] text-[#F4EFEA] border border-[#F5A623]/35 text-xs font-mono font-bold tracking-wider uppercase flex items-center gap-2 shadow-2xl transition-all cursor-pointer whitespace-nowrap shrink-0"
+            className="group relative py-1 flex items-baseline gap-2.5 cursor-pointer text-left"
             aria-label="Abrir comanda de pedidos"
           >
-            <ShoppingBag className="w-3.5 h-3.5 text-[#F5A623]" />
-            <span>Comanda</span>
-            <span className="px-1.5 py-0.5 rounded-md bg-gradient-to-r from-[#E85D1A] to-[#F5A623] text-[#110D0B] text-[10px] font-black tabular-nums">
-              {totalCartCount}
+            <span className="font-cinzel text-[11px] font-bold tracking-[0.26em] uppercase text-[#F4EFEA] group-hover:text-[#F5A623] transition-colors drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
+              Comanda
             </span>
+            <span className="font-editorial-serif italic text-base font-bold text-[#F5A623] group-hover:text-[#E85D1A] transition-colors tabular-nums">
+              /{String(totalCartCount).padStart(2, '0')}
+            </span>
+            <span className="absolute inset-x-0 bottom-0 h-[1px] bg-gradient-to-r from-[#F5A623]/70 via-[#E85D1A] to-transparent group-hover:from-[#E85D1A] group-hover:to-[#F5A623] transition-all" />
           </button>
         </div>
       </div>
+
+      {/* Delicate Center-Fading Brass Hairline */}
+      <div className="max-w-[1440px] mx-auto mt-4 h-[1px] hairline-gold-center opacity-45" />
     </header>
   );
 };

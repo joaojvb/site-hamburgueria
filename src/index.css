@@ -303,3 +303,19 @@ body {
 .cheddar-molten-glow {
   animation: cheddarMoltenPulse 2.6s ease-in-out infinite;
 }
+
+/* Isolated 3D PNG Depth & Chiaroscuro Lighting */
+.layer-isolated-png {
+  filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.88)) drop-shadow(0 6px 12px rgba(232, 93, 26, 0.25));
+  transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.layer-isolated-hovered {
+  filter: drop-shadow(0 0 35px rgba(245, 166, 35, 0.95)) drop-shadow(0 16px 28px rgba(232, 93, 26, 0.75)) drop-shadow(0 25px 40px rgba(0, 0, 0, 0.98)) brightness(1.2) !important;
+}
+
+.layer-isolated-dimmed {
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.95)) brightness(0.65) blur(0.6px);
+  opacity: 0.32 !important;
+  transition: all 0.35s ease-out;
+}

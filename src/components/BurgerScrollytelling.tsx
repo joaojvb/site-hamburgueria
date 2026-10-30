@@ -129,7 +129,7 @@ export const BurgerScrollytelling: React.FC<BurgerScrollytellingProps> = ({
       <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-center">
         {/* =====================================================================
             ESTÁGIO 1 (0% a 20% Scroll): A FACHADA PURA & O VÍDEO FPV
-            Sem textos bloqueando as portas ou competindo por contraste.
+            Sem caixas ou textos bloqueando as portas ou competindo por contraste.
            ===================================================================== */}
 
         {/* =====================================================================
@@ -187,7 +187,7 @@ export const BurgerScrollytelling: React.FC<BurgerScrollytellingProps> = ({
         {/* =====================================================================
             PALCO INTERATIVO CENTRAL (HAMBÚRGUER 3D + LINHA PONTILHADA + CARD)
            ===================================================================== */}
-        <div className="relative z-10 max-w-[1440px] w-full mx-auto px-4 sm:px-12 flex flex-col justify-center">
+        <div className="relative z-10 max-w-[1440px] w-full mx-auto px-4 sm:px-10 flex flex-col justify-center">
           <div className="relative w-full h-[640px] flex items-center justify-center">
             {/* ===============================================================
                 CHAMADAS ORBITAIS DO ESTÁGIO 2 (SALÃO)
@@ -286,10 +286,74 @@ export const BurgerScrollytelling: React.FC<BurgerScrollytellingProps> = ({
             </div>
 
             {/* ===============================================================
-                HAMBÚRGUER CENTRAL COM ANIMAÇÃO 3D REAL (VÍDEO / MALHA 3D / CSS)
+                COLUNA ESQUERDA: ETIQUETAS E NOMES DOS 7 INGREDIENTES ISOLADOS
+                100% legíveis, nunca sobrepostos ou cortados pelo hambúrguer
                =============================================================== */}
             <div
-              className="relative w-full max-w-[440px] h-[580px] flex items-center justify-center z-20 transition-opacity duration-200"
+              className={`hidden md:flex flex-col justify-center gap-2.5 absolute left-0 lg:left-4 top-1/2 -translate-y-1/2 z-30 transition-all duration-300 ${
+                choreography.layerExplosionProgress > 0.32
+                  ? 'opacity-100 translate-x-0 pointer-events-auto'
+                  : 'opacity-0 -translate-x-6 pointer-events-none'
+              }`}
+            >
+              <div className="flex items-center gap-2 pl-3 mb-1">
+                <span className="w-6 h-[1px] bg-[#E85D1A]" />
+                <span className="font-cinzel text-[10px] font-bold tracking-[0.28em] uppercase text-[#F5A623]">
+                  7 CAMADAS DA BRASA
+                </span>
+              </div>
+
+              {BURGER_ANATOMY_LAYERS.map(layer => {
+                const isSelected = displayedLayerId === layer.id;
+                return (
+                  <button
+                    key={layer.id}
+                    type="button"
+                    onMouseEnter={() => {
+                      setHoveredLayerId(layer.id);
+                      setActiveLayerId(layer.id);
+                    }}
+                    onMouseLeave={() => setHoveredLayerId(null)}
+                    onClick={() => setActiveLayerId(layer.id)}
+                    className={`group flex items-center gap-3 py-1.5 px-3 rounded-lg text-left transition-all cursor-pointer ${
+                      isSelected
+                        ? 'bg-[#E85D1A]/20 border-l-2 border-[#E85D1A] pl-4 translate-x-1 shadow-lg shadow-[#E85D1A]/20'
+                        : 'hover:bg-white/5 border-l-2 border-transparent'
+                    }`}
+                  >
+                    <span
+                      className={`font-mono text-xs font-bold tabular-nums transition-colors ${
+                        isSelected
+                          ? 'text-[#F5A623]'
+                          : 'text-[#A39B95] group-hover:text-[#F4EFEA]'
+                      }`}
+                    >
+                      {layer.numberPrefix}.
+                    </span>
+                    <div>
+                      <span
+                        className={`font-cinzel text-xs font-bold tracking-[0.14em] uppercase block transition-colors ${
+                          isSelected
+                            ? 'text-[#F4EFEA] drop-shadow-[0_0_12px_rgba(245,166,35,0.7)]'
+                            : 'text-[#F4EFEA]/70 group-hover:text-[#F4EFEA]'
+                        }`}
+                      >
+                        {layer.title}
+                      </span>
+                      <span className="font-editorial-serif italic text-[11px] text-[#A39B95] block">
+                        {layer.subtitle}
+                      </span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* ===============================================================
+                HAMBÚRGUER CENTRAL COM 7 CAMADAS 3D PURAS (SEM FUNDO PRETO / ZERO CAIXAS)
+               =============================================================== */}
+            <div
+              className="relative w-full max-w-[450px] h-[580px] flex items-center justify-center z-20 transition-opacity duration-200"
               style={{
                 opacity: burgerEntranceOpacity,
                 transform: `translate3d(${mouseOffset.x * 10}px, ${
@@ -306,7 +370,7 @@ export const BurgerScrollytelling: React.FC<BurgerScrollytellingProps> = ({
                 }}
               />
 
-              {/* Renderiza as 7 Camadas 3D Animadas */}
+              {/* Renderiza as 7 Camadas 3D Animadas Isoladas */}
               {BURGER_ANATOMY_LAYERS.map((layer, index) => {
                 const currentY =
                   layer.closedY +
@@ -344,56 +408,16 @@ export const BurgerScrollytelling: React.FC<BurgerScrollytellingProps> = ({
                     }}
                     className="absolute w-full flex items-center justify-center cursor-pointer transition-all duration-300 ease-out group"
                   >
-                    {/* ETIQUETAS 01 A 07 NA ESQUERDA (AO LADO DE CADA CAMADA) */}
-                    <div
-                      onClick={e => {
-                        e.stopPropagation();
-                        setActiveLayerId(layer.id);
-                      }}
-                      onMouseEnter={() => {
-                        setHoveredLayerId(layer.id);
-                        setActiveLayerId(layer.id);
-                      }}
-                      onMouseLeave={() => setHoveredLayerId(null)}
-                      className={`hidden sm:flex items-center gap-2.5 absolute -left-12 lg:-left-24 top-1/2 -translate-y-1/2 transition-all duration-300 cursor-pointer z-30 ${
-                        choreography.layerExplosionProgress > 0.35
-                          ? 'opacity-100 translate-x-0 pointer-events-auto'
-                          : 'opacity-0 translate-x-4 pointer-events-none'
-                      }`}
-                    >
-                      <span
-                        className={`px-2.5 py-1 rounded-md font-mono text-[11px] font-bold tracking-wider border transition-all ${
-                          isSelected
-                            ? 'bg-[#E85D1A] text-[#110D0B] border-[#F5A623] shadow-lg shadow-[#E85D1A]/50 scale-110'
-                            : 'bg-[#0A0706]/90 text-[#A39B95] border-white/20 hover:border-[#F5A623] hover:text-[#F4EFEA]'
-                        }`}
-                      >
-                        {layer.numberPrefix}
-                      </span>
-                      <span
-                        className={`hidden md:inline font-cinzel text-xs font-bold uppercase tracking-[0.14em] transition-colors ${
-                          isSelected
-                            ? 'text-[#F5A623] drop-shadow-[0_2px_10px_rgba(245,166,35,0.8)]'
-                            : 'text-[#F4EFEA]/75 group-hover:text-[#F4EFEA]'
-                        }`}
-                      >
-                        {layer.title}
-                      </span>
-                    </div>
-
-                    {/* COMPONENTE 3D DA CAMADA: SUPORTE A VÍDEO LOOP / 3D GLB / PERSPECTIVA REAL */}
+                    {/* COMPONENTE 3D DA CAMADA: 100% ISOLADO, TRANSPARENTE E SEM FUNDO PRETO */}
                     <BurgerLayerGraphic
                       layerId={layer.id}
                       pngUrl={layer.pngUrl}
-                      videoUrl={layer.videoUrl}
-                      videoSlice={layer.videoSlice}
                       particleEffect={layer.particleEffect}
-                      glbUrl={layer.glbUrl}
                       altText={`${layer.numberPrefix}. ${layer.title} - ${layer.subtitle}`}
                       isHovered={isSelected && choreography.layerExplosionProgress > 0.2}
                       isDimmed={isDimmed}
                       widthPercent={layer.widthPercent}
-                      enable3DRotation={true}
+                      floatDelay={layer.floatDelay}
                     />
                   </div>
                 );
@@ -405,7 +429,7 @@ export const BurgerScrollytelling: React.FC<BurgerScrollytellingProps> = ({
                =============================================================== */}
             <div
               className={`hidden xl:block absolute inset-0 pointer-events-none z-30 transition-opacity duration-300 ${
-                choreography.layerExplosionProgress > 0.4 ? 'opacity-100' : 'opacity-0'
+                choreography.layerExplosionProgress > 0.38 ? 'opacity-100' : 'opacity-0'
               }`}
             >
               <svg className="w-full h-full" viewBox="0 0 1440 640" fill="none">
@@ -434,7 +458,7 @@ export const BurgerScrollytelling: React.FC<BurgerScrollytellingProps> = ({
 
                 {/* Trajeto pontilhado laranja conectando até o Card detalhado da direita */}
                 <path
-                  d={`M 840 ${svgStartY} L 930 ${svgStartY} L 970 320 L 1030 320`}
+                  d={`M 840 ${svgStartY} L 930 ${svgStartY} L 970 320 L 1040 320`}
                   stroke="#E85D1A"
                   strokeWidth="2"
                   strokeDasharray="5 5"
@@ -447,8 +471,8 @@ export const BurgerScrollytelling: React.FC<BurgerScrollytellingProps> = ({
                 CARD DETALHADO NA DIREITA (ATUALIZAÇÃO EM TEMPO REAL)
                =============================================================== */}
             <div
-              className={`hidden xl:flex flex-col justify-between absolute right-0 top-1/2 -translate-y-1/2 z-40 w-full max-w-[370px] bg-[#0E0907]/90 backdrop-blur-xl border border-[#F5A623]/35 p-6 rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.92)] transition-all duration-300 ${
-                choreography.layerExplosionProgress > 0.4
+              className={`hidden xl:flex flex-col justify-between absolute right-0 top-1/2 -translate-y-1/2 z-40 w-full max-w-[370px] bg-[#0E0907]/92 backdrop-blur-xl border border-[#F5A623]/35 p-6 rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.92)] transition-all duration-300 ${
+                choreography.layerExplosionProgress > 0.38
                   ? 'opacity-100 translate-x-0 pointer-events-auto'
                   : 'opacity-0 translate-x-8 pointer-events-none'
               }`}

@@ -3,22 +3,18 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useRef, useEffect } from 'react';
-import { LayerVideoSlice } from '../data/burgerLayers.ts';
+import React from 'react';
 
 export interface BurgerLayerGraphicProps {
   layerId: string;
   pngUrl?: string | null;
-  videoUrl?: string | null;
-  videoSlice?: LayerVideoSlice;
-  glbUrl?: string | null;
   particleEffect?: 'steam' | 'dewdrops' | 'molten' | 'smoke' | 'none';
   altText?: string;
   className?: string;
   isHovered?: boolean;
   isDimmed?: boolean;
   widthPercent?: number;
-  enable3DRotation?: boolean;
+  floatDelay?: string;
 }
 
 const DEFAULT_PNG_BY_ID: Record<string, string> = {
@@ -41,125 +37,54 @@ const DEFAULT_PNG_BY_ID: Record<string, string> = {
 export const BurgerLayerGraphic: React.FC<BurgerLayerGraphicProps> = ({
   layerId,
   pngUrl,
-  videoUrl,
-  videoSlice,
-  glbUrl,
   particleEffect = 'none',
   altText,
   className = '',
   isHovered = false,
   isDimmed = false,
   widthPercent = 100,
-  enable3DRotation = true,
+  floatDelay = '0s',
 }) => {
   const resolvedPng = pngUrl || DEFAULT_PNG_BY_ID[layerId];
-  const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Manage video looping within loopStart and loopEnd if specified
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video || !videoSlice) return;
-
-    const handleTimeUpdate = () => {
-      if (videoSlice.loopEnd && video.currentTime >= videoSlice.loopEnd) {
-        video.currentTime = videoSlice.loopStart || 0;
-      }
-    };
-
-    video.addEventListener('timeupdate', handleTimeUpdate);
-    return () => video.removeEventListener('timeupdate', handleTimeUpdate);
-  }, [videoSlice]);
-
-  // Adjust playback speed when hovered for real-time acceleration
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    if (isHovered) {
-      video.playbackRate = 1.6;
-    } else if (isDimmed) {
-      video.playbackRate = 0.6;
-    } else {
-      video.playbackRate = 1.0;
-    }
-  }, [isHovered, isDimmed]);
-
-  // 3D class selection based on hover/dimmed state
-  const rotation3DClass = !enable3DRotation
-    ? ''
-    : isHovered
-    ? 'layer-3d-hovered'
-    : isDimmed
-    ? 'layer-3d-dimmed'
-    : 'layer-3d-idle';
-
-  if (resolvedPng || videoUrl) {
+  if (resolvedPng) {
     return (
       <div
-        className={`relative flex items-center justify-center transition-all duration-300 ${className} ${rotation3DClass}`}
+        className={`relative flex items-center justify-center select-none transition-all duration-300 ${className} ${
+          isHovered
+            ? 'layer-3d-hovered z-40'
+            : isDimmed
+            ? 'layer-3d-dimmed z-10'
+            : 'layer-3d-idle z-20'
+        }`}
         style={{
           width: `${widthPercent}%`,
           margin: '0 auto',
           transformStyle: 'preserve-3d',
+          animationDelay: floatDelay,
         }}
       >
-        {/* Support 1: 3D Video Loop (MP4/WebM with mix-blend-mode: screen) */}
-        {videoUrl && (
-          <div
-            className="absolute inset-0 z-20 pointer-events-none overflow-hidden rounded-2xl flex items-center justify-center"
-            style={{ mixBlendMode: 'screen' }}
-          >
-            <video
-              ref={videoRef}
-              src={videoUrl}
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="w-full h-full object-cover select-none pointer-events-none"
-              style={{
-                objectPosition: videoSlice ? `50% ${videoSlice.objectPositionY}` : 'center',
-                transform: videoSlice ? `scale(${videoSlice.scale})` : 'scale(1)',
-                filter: isHovered
-                  ? 'brightness(1.3) contrast(1.15) saturate(1.2)'
-                  : 'brightness(1.05) contrast(1.05)',
-              }}
-            />
-          </div>
-        )}
-
-        {/* Support 2: High-Definition Translucent Base PNG with 3D Depth Shadow */}
-        {resolvedPng && (
-          <img
-            src={resolvedPng}
-            alt={altText || layerId}
-            referrerPolicy="no-referrer"
-            draggable={false}
-            className={`w-full h-auto object-contain select-none transition-all duration-300 relative z-10 ${
-              videoUrl ? 'opacity-90' : 'opacity-100'
-            } ${
-              isHovered
-                ? 'filter drop-shadow-[0_0_35px_rgba(245,166,35,0.85)] drop-shadow-[0_16px_28px_rgba(232,93,26,0.6)] brightness-115'
-                : 'filter drop-shadow-[0_16px_24px_rgba(0,0,0,0.88)]'
-            }`}
-          />
-        )}
-
-        {/* Support 3: Optional 3D Model Placeholder if GLB is configured */}
-        {glbUrl && (
-          <div
-            data-glb-model={glbUrl}
-            className="absolute inset-0 pointer-events-none z-30 opacity-0"
-            aria-hidden="true"
-          />
-        )}
+        {/* Isolated 3D PNG Cut — 100% Transparent, No Background Rectangles */}
+        <img
+          src={resolvedPng}
+          alt={altText || layerId}
+          referrerPolicy="no-referrer"
+          draggable={false}
+          className={`w-full h-auto object-contain select-none pointer-events-auto transition-all duration-300 ${
+            isHovered
+              ? 'layer-isolated-hovered'
+              : isDimmed
+              ? 'layer-isolated-dimmed'
+              : 'layer-isolated-png'
+          }`}
+        />
 
         {/* ===================================================================
             PARTÍCULAS 3D DINÂMICAS:
             - Carne (Camada 5): Vapor e fumaça viva subindo da grelha
             - Cebola & Salada (Camadas 2 e 3): Gotas d'água brilhando
             - Cheddar (Camada 4): Brilho de fusão quente
-            - Bacon (Camada 6): Faíscas defumadas de macieira
+            - Bacon (Camada 6): Defumação de macieira
            =================================================================== */}
         {particleEffect === 'steam' && (
           <div className="absolute inset-x-0 -top-8 h-20 pointer-events-none overflow-visible z-30">
@@ -180,7 +105,7 @@ export const BurgerLayerGraphic: React.FC<BurgerLayerGraphicProps> = ({
                     width: p.size,
                     height: p.size,
                     animationDelay: p.delay,
-                    '--steam-duration': isHovered ? '1.5s' : p.dur,
+                    '--steam-duration': isHovered ? '1.4s' : p.dur,
                     '--drift-x': p.drift,
                   } as React.CSSProperties
                 }
@@ -192,14 +117,14 @@ export const BurgerLayerGraphic: React.FC<BurgerLayerGraphicProps> = ({
         {particleEffect === 'dewdrops' && (
           <div className="absolute inset-0 pointer-events-none z-30">
             {[
-              { top: '35%', left: '22%', dur: '1.6s', delay: '0s' },
-              { top: '55%', left: '44%', dur: '2.1s', delay: '0.5s' },
-              { top: '38%', left: '68%', dur: '1.8s', delay: '1.0s' },
-              { top: '62%', left: '80%', dur: '2.4s', delay: '0.3s' },
+              { top: '35%', left: '24%', dur: '1.6s', delay: '0s' },
+              { top: '55%', left: '46%', dur: '2.1s', delay: '0.5s' },
+              { top: '38%', left: '70%', dur: '1.8s', delay: '1.0s' },
+              { top: '62%', left: '82%', dur: '2.4s', delay: '0.3s' },
             ].map((d, idx) => (
               <span
                 key={idx}
-                className="dewdrop-sparkle absolute w-2 h-2 rounded-full"
+                className="dewdrop-sparkle absolute w-2.5 h-2.5 rounded-full"
                 style={
                   {
                     top: d.top,
@@ -216,7 +141,7 @@ export const BurgerLayerGraphic: React.FC<BurgerLayerGraphicProps> = ({
         {particleEffect === 'molten' && (
           <div
             className={`absolute inset-0 pointer-events-none z-25 cheddar-molten-glow ${
-              isHovered ? 'opacity-100' : 'opacity-75'
+              isHovered ? 'opacity-100' : 'opacity-80'
             }`}
           />
         )}

@@ -1,0 +1,158 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Fraunces", Georgia, serif;
+  --font-display: "Passion One", "Syne", "Fraunces", sans-serif;
+  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --color-charcoal-dark: #110D0B;
+  --color-charcoal-surface: #181310;
+  --color-charcoal-elevated: #241C18;
+  --color-ember: #E85D1A;
+  --color-amber-gold: #F5A623;
+  --color-cream: #F4EFEA;
+  --color-warm-gray: #A39B95;
+}
+
+:root {
+  color-scheme: dark;
+  background-color: #110D0B;
+  color: #F4EFEA;
+  font-family: var(--font-sans);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #110D0B;
+  color: #F4EFEA;
+  overflow-x: hidden;
+  selection-background-color: #E85D1A;
+  selection-color: #FFFFFF;
+}
+
+::selection {
+  background: #E85D1A;
+  color: #FFFFFF;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #110D0B;
+}
+::-webkit-scrollbar-thumb {
+  background: #2E221B;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #E85D1A;
+}
+
+/* Glassmorphism helpers */
+.glass-outback {
+  background: rgba(28, 21, 18, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(245, 166, 35, 0.18);
+}
+
+.glass-outback-hover:hover {
+  border-color: rgba(232, 93, 26, 0.45);
+  box-shadow: 0 10px 30px -10px rgba(232, 93, 26, 0.2);
+}
+
+/* Sky-Cookie Frosted Capsule & Obsidian Squircle Node */
+.frosted-sky-capsule {
+  background: rgba(255, 248, 240, 0.09);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 245, 235, 0.18);
+  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.65);
+}
+
+.obsidian-node-btn {
+  background: #0A0706;
+  border: 1px solid rgba(245, 166, 35, 0.28);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.font-kinetic-display {
+  font-family: "Passion One", Impact, sans-serif;
+  letter-spacing: -0.02em;
+  line-height: 0.88;
+}
+
+/* Ambient fire glow */
+.ember-glow {
+  box-shadow: 0 0 35px -5px rgba(232, 93, 26, 0.35);
+}
+
+.gold-glow {
+  box-shadow: 0 0 35px -5px rgba(245, 166, 35, 0.25);
+}
+
+/* Rising Heat Distortion & Thermal Shimmer Keyframes for 'Monte no Fogo' */
+@keyframes heatWaveRise {
+  0% {
+    transform: translate3d(0, 16%, 0) scaleX(0.95) scaleY(0.98) skewX(-2deg);
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.65;
+  }
+  50% {
+    transform: translate3d(-2%, -12%, 0) scaleX(1.05) scaleY(1.08) skewX(2deg);
+    opacity: 0.85;
+  }
+  75% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translate3d(2%, -38%, 0) scaleX(0.97) scaleY(1.14) skewX(-1.5deg);
+    opacity: 0;
+  }
+}
+
+@keyframes heatShimmerPulse {
+  0%, 100% {
+    transform: scale(1) translateY(0px);
+    opacity: 0.45;
+  }
+  50% {
+    transform: scale(1.06, 1.12) translateY(-10px);
+    opacity: 0.78;
+  }
+}
+
+@keyframes emberPlatterBreathe {
+  0%, 100% {
+    opacity: 0.55;
+    transform: scaleX(0.96);
+  }
+  50% {
+    opacity: 0.92;
+    transform: scaleX(1.05);
+  }
+}
+
+.heat-shimmer-plume {
+  animation: heatWaveRise var(--heat-speed, 4.8s) cubic-bezier(0.37, 0, 0.63, 1) infinite;
+  filter: blur(18px);
+}
+
+.heat-shimmer-plume-delayed {
+  animation: heatWaveRise var(--heat-speed, 4.8s) cubic-bezier(0.37, 0, 0.63, 1) infinite;
+  animation-delay: -2.4s;
+  filter: blur(22px);
+}
+
+.heat-convection-aura {
+  animation: heatShimmerPulse var(--heat-speed, 4.2s) ease-in-out infinite;
+}
+
+.ember-platter-hearth {
+  animation: emberPlatterBreathe 3.2s ease-in-out infinite;
+}

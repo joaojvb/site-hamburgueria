@@ -1,0 +1,6 @@
+{
+  "name": "OUTLAND FIRE GRILL",
+  "description": "Experiência gastronômica premium na brasa viva. Anatomia interativa de hambúrgueres artesanais, montador 3D no fogo e cardápio de luxo.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

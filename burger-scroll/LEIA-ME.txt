@@ -1,0 +1,29 @@
+COMO INSTALAR (Vite + React) — sem alterar nada do que já existe
+
+1. Copie a pasta "frames" para:        public/assets/burger-frames/
+2. Copie estes 3 arquivos para:        src/components/
+     BurgerExplodedScroll.tsx
+     burgerScrollCore.js
+     burgerScrollCore.d.ts
+3. Em src/App.tsx, só acrescente (não remova nada):
+     import { BurgerExplodedScroll } from './components/BurgerExplodedScroll.tsx';
+     ...dentro de <main>, logo depois do <BurgerScrollytelling .../>:
+     <BurgerExplodedScroll />
+
+Como funciona: o hambúrguer abre no scroll; ao passar o mouse (ou tocar) num ingrediente,
+ele brilha, o resto escurece e uma seta curva mostra o que é.
+
+Ajustes:
+ - Textos e títulos das etiquetas: array ITEMS no início de burgerScrollCore.js
+ - Tamanho da rolagem: <BurgerExplodedScroll heightVh={800} />
+ - Cores: variáveis CSS --bs-accent, --bs-fg, --bs-muted, --bs-card, --bs-border
+ - As posições das setas (KY/KX) foram medidas para o vídeo burger-3d-exploded.mp4.
+   Se trocar o vídeo, é preciso medir de novo.
+
+---- TEXTO PARA COLAR NO ANTIGRAVITY ----
+Adicione ao projeto um componente novo, sem modificar nenhum arquivo existente além de src/App.tsx (e nele apenas importar e renderizar, sem remover nada).
+1) Copie a pasta burger-scroll/frames para public/assets/burger-frames/.
+2) Copie BurgerExplodedScroll.tsx, burgerScrollCore.js e burgerScrollCore.d.ts para src/components/.
+3) Em src/App.tsx, importe BurgerExplodedScroll e renderize <BurgerExplodedScroll /> dentro de <main>, logo depois de <BurgerScrollytelling />.
+4) Não altere estilos globais, dados, nem outros componentes. Não tente reanalisar os ingredientes: as posições das setas já estão calibradas dentro de burgerScrollCore.js.
+5) Rode "npm run lint" e "npm run build". Corrija apenas erros nos arquivos novos e me diga o que mudou.

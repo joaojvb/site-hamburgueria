@@ -5,7 +5,7 @@
 
 import React, { useState } from 'react';
 import { Navbar } from './components/Navbar.tsx';
-import { BurgerScrollytelling } from './components/BurgerScrollytelling.tsx';
+import { BurgerExplodedScroll } from './components/BurgerExplodedScroll.tsx';
 import { BurgerCustomizer } from './components/BurgerCustomizer.tsx';
 import { BentoGridMenu } from './components/BentoGridMenu.tsx';
 import { Footer } from './components/Footer.tsx';
@@ -110,13 +110,6 @@ export default function App() {
     setCartItems([]);
   };
 
-  const handleScrollToBuilder = () => {
-    const el = document.getElementById('monte-no-fogo');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   return (
     <div className="relative isolate min-h-screen bg-transparent text-[#F4EFEA] selection:bg-[#E85D1A] selection:text-white">
       {/* BACKGROUND FIXO EM PLANO-SEQUÊNCIA (SCROLLYTELLING 4 ESTÁGIOS + VÍDEO FPV HABILITADO POR PADRÃO) */}
@@ -133,8 +126,8 @@ export default function App() {
       />
 
       <main className="relative z-10">
-        {/* ESTÁGIOS 1, 2 E 3: ENTRADA NA FACHADA -> SALÃO -> HAMBÚRGUER DESCONSTRUÍDO NA GRELHA */}
-        <BurgerScrollytelling onGoToBuilder={handleScrollToBuilder} />
+        {/* HAMBÚRGUER QUE SE SEPARA NO SCROLL (145 FRAMES WEBP CALIBRADOS) */}
+        <BurgerExplodedScroll />
 
         {/* ESTÁGIO 4: MONTADOR INTERATIVO 3D NA BANCADA RÚSTICA DO CHEF */}
         <BurgerCustomizer onAddToCart={handleAddCustomBurger} />

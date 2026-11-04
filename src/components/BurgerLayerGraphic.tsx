@@ -50,13 +50,12 @@ export const BurgerLayerGraphic: React.FC<BurgerLayerGraphicProps> = ({
   if (resolvedPng) {
     return (
       <div
-        className={`relative flex items-center justify-center select-none transition-all duration-300 ${className} ${
-          isHovered
-            ? 'layer-3d-hovered z-40'
-            : isDimmed
+        className={`relative flex items-center justify-center select-none transition-all duration-300 ${className} ${isHovered
+          ? 'layer-3d-hovered z-40'
+          : isDimmed
             ? 'layer-3d-dimmed z-10'
             : 'layer-3d-idle z-20'
-        }`}
+          }`}
         style={{
           width: `${widthPercent}%`,
           margin: '0 auto',
@@ -70,13 +69,12 @@ export const BurgerLayerGraphic: React.FC<BurgerLayerGraphicProps> = ({
           alt={altText || layerId}
           referrerPolicy="no-referrer"
           draggable={false}
-          className={`w-full h-auto object-contain select-none pointer-events-auto transition-all duration-300 ${
-            isHovered
-              ? 'layer-isolated-hovered'
-              : isDimmed
+          className={`w-full h-auto object-contain select-none pointer-events-auto transition-all duration-300 ${isHovered
+            ? 'layer-isolated-hovered'
+            : isDimmed
               ? 'layer-isolated-dimmed'
               : 'layer-isolated-png'
-          }`}
+            }`}
         />
 
         {/* ===================================================================
@@ -140,9 +138,8 @@ export const BurgerLayerGraphic: React.FC<BurgerLayerGraphicProps> = ({
 
         {particleEffect === 'molten' && (
           <div
-            className={`absolute inset-0 pointer-events-none z-25 cheddar-molten-glow ${
-              isHovered ? 'opacity-100' : 'opacity-80'
-            }`}
+            className={`absolute inset-0 pointer-events-none z-25 cheddar-molten-glow ${isHovered ? 'opacity-100' : 'opacity-80'
+              }`}
           />
         )}
 

@@ -13,6 +13,7 @@ export interface BurgerLayerGraphicProps {
   className?: string;
   isHovered?: boolean;
   isDimmed?: boolean;
+  isClosed?: boolean;
   widthPercent?: number;
   floatDelay?: string;
 }
@@ -42,6 +43,7 @@ export const BurgerLayerGraphic: React.FC<BurgerLayerGraphicProps> = ({
   className = '',
   isHovered = false,
   isDimmed = false,
+  isClosed = false,
   widthPercent = 100,
   floatDelay = '0s',
 }) => {
@@ -50,31 +52,38 @@ export const BurgerLayerGraphic: React.FC<BurgerLayerGraphicProps> = ({
   if (resolvedPng) {
     return (
       <div
-        className={`relative flex items-center justify-center select-none transition-all duration-300 ${className} ${isHovered
-          ? 'layer-3d-hovered z-40'
-          : isDimmed
+        className={`relative flex items-center justify-center select-none transition-all duration-300 ${className} ${
+          isHovered
+            ? 'layer-3d-hovered z-40'
+            : isDimmed
             ? 'layer-3d-dimmed z-10'
+            : isClosed
+            ? 'z-20'
             : 'layer-3d-idle z-20'
-          }`}
+        }`}
         style={{
           width: `${widthPercent}%`,
           margin: '0 auto',
-          transformStyle: 'preserve-3d',
+          transformStyle: isClosed ? 'flat' : 'preserve-3d',
           animationDelay: floatDelay,
         }}
       >
-        {/* Isolated 3D PNG Cut — 100% Transparent, No Background Rectangles */}
+        {/* Isolated 3D PNG Cut — Quando fechado, remove a sombra projetada entre camadas */}
         <img
           src={resolvedPng}
           alt={altText || layerId}
           referrerPolicy="no-referrer"
           draggable={false}
-          className={`w-full h-auto object-contain select-none pointer-events-auto transition-all duration-300 ${isHovered
-            ? 'layer-isolated-hovered'
-            : isDimmed
+          style={isClosed && !isHovered ? { filter: 'none' } : undefined}
+          className={`w-full h-auto object-contain select-none pointer-events-auto transition-all duration-300 ${
+            isHovered
+              ? 'layer-isolated-hovered'
+              : isDimmed
               ? 'layer-isolated-dimmed'
+              : isClosed
+              ? 'filter-none'
               : 'layer-isolated-png'
-            }`}
+          }`}
         />
 
         {/* ===================================================================

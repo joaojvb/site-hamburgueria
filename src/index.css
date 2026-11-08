@@ -1,98 +1,140 @@
 @import "tailwindcss";
 
 @theme {
-  --font-serif: "Cormorant Garamond", "Playfair Display", Georgia, serif;
-  --font-luxury: "Cormorant Garamond", Georgia, serif;
-  --font-display: "Playfair Display", "Cormorant Garamond", Georgia, serif;
-  --font-cinzel: "Cinzel", Georgia, serif;
-  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-poster: "League Gothic", "Archivo", sans-serif;
+  --font-grotesk: "Archivo", sans-serif;
+  --font-sans: "Archivo", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
-  --color-charcoal-dark: #110D0B;
-  --color-charcoal-surface: #181310;
-  --color-charcoal-elevated: #241C18;
-  --color-ember: #E85D1A;
-  --color-amber-gold: #F5A623;
-  --color-cream: #F4EFEA;
-  --color-warm-gray: #A39B95;
+
+  /* Poster Brutal-Pop Palette (Reference 1 & 2) */
+  --color-night-canvas: #0D0814;
+  --color-night-surface: #160F22;
+  --color-night-elevated: #231636;
+  --color-poster-violet: #8E6FD1;
+  --color-lilac-cream: #EDE3F7;
+  --color-antique-gold: #E0A95F;
+  --color-hot-pink: #FF4FA3;
+  --color-ember-orange: #FF5B1F;
+
+  /* Retained brand colors for existing component compatibility */
+  --color-charcoal-dark: #0D0814;
+  --color-charcoal-surface: #160F22;
+  --color-charcoal-elevated: #231636;
+  --color-ember: #FF5B1F;
+  --color-amber-gold: #E0A95F;
+  --color-cream: #EDE3F7;
+  --color-warm-gray: #A797BD;
 }
 
 :root {
   color-scheme: dark;
-  background-color: #080504;
-  color: #F4EFEA;
+  background-color: #0D0814;
+  color: #EDE3F7;
   font-family: var(--font-sans);
+
+  /* Overrides for burgerScrollCore injected styles */
+  --bs-accent: #8E6FD1;
+  --bs-fg: #EDE3F7;
+  --bs-muted: #A797BD;
+  --bs-card: rgba(22, 15, 34, 0.90);
+  --bs-border: rgba(142, 111, 209, 0.4);
 }
 
 body {
   margin: 0;
   padding: 0;
-  background-color: #080504;
-  color: #F4EFEA;
+  background-color: #0D0814;
+  color: #EDE3F7;
   overflow-x: hidden;
-  selection-background-color: #E85D1A;
-  selection-color: #FFFFFF;
+  font-family: var(--font-sans);
+  selection-background-color: #8E6FD1;
+  selection-color: #0D0814;
 }
 
 ::selection {
-  background: #E85D1A;
-  color: #FFFFFF;
+  background: #8E6FD1;
+  color: #0D0814;
 }
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #080504;
+  background: #0D0814;
 }
 ::-webkit-scrollbar-thumb {
-  background: #3A2418;
+  background: #231636;
+  border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #E85D1A;
+  background: #8E6FD1;
 }
 
-/* Ultra-Premium Editorial Typography */
+/* ============================================================================
+   TYPOGRAPHY UTILITIES (POSTER BRUTAL-POP)
+   ============================================================================ */
+.font-poster {
+  font-family: var(--font-poster);
+  text-transform: uppercase;
+  font-stretch: condensed;
+  letter-spacing: 0.02em;
+}
+
+.font-grotesk {
+  font-family: var(--font-grotesk);
+}
+
 .font-cinzel {
-  font-family: "Cinzel", Georgia, serif;
+  font-family: var(--font-poster);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .font-editorial-serif {
-  font-family: "Cormorant Garamond", "Playfair Display", Georgia, serif;
+  font-family: var(--font-grotesk);
 }
 
 .font-luxury {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--font-poster);
 }
 
 .font-display {
-  font-family: "Playfair Display", Georgia, serif;
+  font-family: var(--font-poster);
 }
 
-.text-molten-gold {
-  background: linear-gradient(180deg, #FFFFFF 0%, #FDF4E3 22%, #F5CE85 52%, #D49B42 82%, #A8651E 100%);
+/* Daylist 3D Gradient Text */
+.text-daylist {
+  background: linear-gradient(135deg, #FF4FA3 0%, #8E6FD1 50%, #E0A95F 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 8px 24px rgba(212, 155, 66, 0.38));
+}
+
+.text-molten-gold {
+  background: linear-gradient(180deg, #FFFFFF 0%, #EDE3F7 30%, #E0A95F 75%, #D49B42 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 4px 14px rgba(224, 169, 95, 0.45));
 }
 
 .text-engraved-cream {
-  color: #F4EFEA;
+  color: #EDE3F7;
   text-shadow: 0 10px 35px rgba(0, 0, 0, 0.95), 0 2px 8px rgba(0, 0, 0, 0.85);
 }
 
-/* Architectural Hairlines & Chamfered Shapes (No Rounded-Rectangle Slop) */
+/* Decorative Hairlines */
 .hairline-gold-r {
-  background: linear-gradient(90deg, rgba(245, 166, 35, 0.65) 0%, rgba(232, 93, 26, 0.2) 70%, transparent 100%);
+  background: linear-gradient(90deg, rgba(224, 169, 95, 0.8) 0%, rgba(142, 111, 209, 0.3) 70%, transparent 100%);
 }
 
 .hairline-gold-l {
-  background: linear-gradient(270deg, rgba(245, 166, 35, 0.65) 0%, rgba(232, 93, 26, 0.2) 70%, transparent 100%);
+  background: linear-gradient(270deg, rgba(224, 169, 95, 0.8) 0%, rgba(142, 111, 209, 0.3) 70%, transparent 100%);
 }
 
 .hairline-gold-center {
-  background: linear-gradient(90deg, transparent 0%, rgba(245, 166, 35, 0.55) 50%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(224, 169, 95, 0.6) 30%, rgba(142, 111, 209, 0.8) 50%, rgba(224, 169, 95, 0.6) 70%, transparent 100%);
 }
 
 .clip-chamfer {
@@ -104,15 +146,139 @@ body {
   mask-image: radial-gradient(ellipse 88% 85% at 50% 50%, #000 55%, transparent 100%);
 }
 
-/* Legacy helpers kept minimal for CartDrawer compatibility */
-.glass-outback {
-  background: rgba(14, 9, 7, 0.82);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-left: 1px solid rgba(245, 166, 35, 0.3);
+/* Sticker Drop Shadows */
+.sticker-shadow-violet {
+  box-shadow: 5px 5px 0px #8E6FD1;
 }
 
-/* Rising Heat Distortion & Thermal Shimmer Keyframes */
+.sticker-shadow-gold {
+  box-shadow: 5px 5px 0px #E0A95F;
+}
+
+.sticker-shadow-pink {
+  box-shadow: 5px 5px 0px #FF4FA3;
+}
+
+.sticker-shadow-dark {
+  box-shadow: 5px 5px 0px #0D0814;
+}
+
+/* Starburst Spin Keyframe */
+@keyframes starSpinAnimation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.star-spin {
+  animation: starSpinAnimation 18s linear infinite;
+  transform-origin: center;
+}
+
+/* Endless Marquee Animation */
+@keyframes marqueeScroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  animation: marqueeScroll 22s linear infinite;
+}
+
+/* Film Grain Simulation Overlay */
+.film-grain {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+/* ============================================================================
+   BURGER EXPLODED SCROLL OVERRIDES (THEME ALIGNMENT)
+   Injects the Poster Brutal-Pop style into the Canvas/Cards without touching JS
+   ============================================================================ */
+.bs-stick {
+  font-family: var(--font-sans) !important;
+  color: #EDE3F7 !important;
+}
+
+.bs-card {
+  border-radius: 4px !important;
+  border: 1.5px solid #8E6FD1 !important;
+  background: rgba(18, 12, 28, 0.92) !important;
+  box-shadow: 5px 5px 0px rgba(142, 111, 209, 0.7), 0 16px 36px rgba(0, 0, 0, 0.85) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+
+.bs-num {
+  font-family: var(--font-poster) !important;
+  font-size: 1.25rem !important;
+  line-height: 1 !important;
+  letter-spacing: 0.06em !important;
+  background: #8E6FD1 !important;
+  color: #0D0814 !important;
+  font-weight: 900 !important;
+  border-radius: 2px !important;
+  padding: 0.35rem 0.55rem !important;
+}
+
+.bs-t {
+  font-family: var(--font-poster) !important;
+  font-size: 1.35rem !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  color: #EDE3F7 !important;
+  line-height: 1 !important;
+}
+
+.bs-s {
+  font-family: var(--font-mono) !important;
+  font-size: 0.68rem !important;
+  letter-spacing: 0.12em !important;
+  color: #E0A95F !important;
+  margin-top: 0.25rem !important;
+}
+
+.bs-d {
+  font-family: var(--font-grotesk) !important;
+  font-size: 0.76rem !important;
+  line-height: 1.4 !important;
+  color: #EDE3F7 !important;
+  opacity: 0.85 !important;
+}
+
+.bs-line {
+  stroke: #8E6FD1 !important;
+  filter: drop-shadow(0 0 6px rgba(142, 111, 209, 0.85)) !important;
+}
+
+.bs-head, .bs-dot {
+  fill: #E0A95F !important;
+}
+
+.bs-ring {
+  stroke: #FF4FA3 !important;
+}
+
+.bs-bar {
+  background: linear-gradient(90deg, #8E6FD1 0%, #FF4FA3 50%, #FF5B1F 100%) !important;
+}
+
+.bs-hint {
+  font-family: var(--font-mono) !important;
+  letter-spacing: 0.24em !important;
+  color: #A797BD !important;
+}
+
+/* ============================================================================
+   FIRE, HEAT & 3D LAYER ANIMATION KEYFRAMES (PRESERVED)
+   ============================================================================ */
 @keyframes heatWaveRise {
   0% {
     transform: translate3d(0, 16%, 0) scaleX(0.95) scaleY(0.98) skewX(-2deg);
@@ -174,8 +340,8 @@ body {
 }
 
 .grill-ember-spark {
-  background: radial-gradient(circle, #FFF3D1 0%, #F5A623 45%, #E85D1A 80%, transparent 100%);
-  box-shadow: 0 0 10px 2px rgba(232, 93, 26, 0.85), 0 0 20px 4px rgba(245, 166, 35, 0.45);
+  background: radial-gradient(circle, #FFF3D1 0%, #E0A95F 45%, #FF5B1F 80%, transparent 100%);
+  box-shadow: 0 0 10px 2px rgba(255, 91, 31, 0.85), 0 0 20px 4px rgba(224, 169, 95, 0.45);
   animation-name: grillSparkRise;
   animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
   animation-iteration-count: infinite;
@@ -214,15 +380,12 @@ body {
   }
 }
 
-@keyframes spin3dHoverFast {
+@keyframes ingredientGlowPulse {
   0% {
-    transform: perspective(1000px) rotateX(10deg) rotateY(0deg) scale(1.15);
-  }
-  50% {
-    transform: perspective(1000px) rotateX(10deg) rotateY(180deg) scale(1.18);
+    filter: drop-shadow(0 0 16px rgba(224, 169, 95, 0.85)) drop-shadow(0 0 30px rgba(255, 91, 31, 0.55)) brightness(1.2);
   }
   100% {
-    transform: perspective(1000px) rotateX(10deg) rotateY(360deg) scale(1.15);
+    filter: drop-shadow(0 0 28px rgba(224, 169, 95, 1)) drop-shadow(0 0 48px rgba(255, 79, 163, 0.75)) brightness(1.28);
   }
 }
 
@@ -233,17 +396,17 @@ body {
 }
 
 .layer-3d-hovered {
-  animation: spin3dHoverFast 2.8s linear infinite;
-  transform-style: preserve-3d;
-  will-change: transform;
-  filter: drop-shadow(0 0 32px rgba(245, 166, 35, 0.75)) drop-shadow(0 16px 28px rgba(232, 93, 26, 0.55)) brightness(1.18);
+  transform: translateZ(28px) scale(1.05);
+  animation: ingredientGlowPulse 1.6s ease-in-out infinite alternate;
+  will-change: transform, filter;
+  z-index: 50 !important;
 }
 
 .layer-3d-dimmed {
   animation-play-state: paused;
   opacity: 0.35 !important;
-  filter: brightness(0.7) blur(0.6px);
-  transition: all 0.4s ease-out;
+  filter: brightness(0.65) blur(0.7px) saturate(0.7);
+  transition: all 0.3s ease-out;
 }
 
 /* Steam & Smoke Particles for Patty (Layer 5) */
@@ -266,7 +429,7 @@ body {
 
 .steam-smoke-whisps {
   animation: steamParticleRise var(--steam-duration, 2.4s) ease-out infinite;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.55) 0%, rgba(245, 166, 35, 0.25) 50%, transparent 80%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.55) 0%, rgba(224, 169, 95, 0.25) 50%, transparent 80%);
   filter: blur(5px);
   pointer-events: none;
 }
@@ -293,10 +456,10 @@ body {
 /* Molten Pulsing Heat on Cheddar (Layer 4) */
 @keyframes cheddarMoltenPulse {
   0%, 100% {
-    filter: drop-shadow(0 8px 16px rgba(245, 166, 35, 0.4)) brightness(1);
+    filter: drop-shadow(0 8px 16px rgba(224, 169, 95, 0.4)) brightness(1);
   }
   50% {
-    filter: drop-shadow(0 12px 28px rgba(232, 93, 26, 0.75)) drop-shadow(0 0 20px rgba(245, 166, 35, 0.6)) brightness(1.15);
+    filter: drop-shadow(0 12px 28px rgba(255, 91, 31, 0.75)) drop-shadow(0 0 20px rgba(224, 169, 95, 0.6)) brightness(1.15);
   }
 }
 
@@ -306,16 +469,18 @@ body {
 
 /* Isolated 3D PNG Depth & Chiaroscuro Lighting */
 .layer-isolated-png {
-  filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.88)) drop-shadow(0 6px 12px rgba(232, 93, 26, 0.25));
+  filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.88)) drop-shadow(0 6px 12px rgba(142, 111, 209, 0.25));
   transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .layer-isolated-hovered {
-  filter: drop-shadow(0 0 35px rgba(245, 166, 35, 0.95)) drop-shadow(0 16px 28px rgba(232, 93, 26, 0.75)) drop-shadow(0 25px 40px rgba(0, 0, 0, 0.98)) brightness(1.2) !important;
+  filter: drop-shadow(0 0 26px rgba(224, 169, 95, 0.98)) drop-shadow(0 0 45px rgba(255, 91, 31, 0.75)) brightness(1.24) contrast(1.1) !important;
+  transform: scale(1.04);
+  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .layer-isolated-dimmed {
-  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.95)) brightness(0.65) blur(0.6px);
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.85)) brightness(0.6) blur(0.7px) saturate(0.75) !important;
   opacity: 0.32 !important;
-  transition: all 0.35s ease-out;
+  transition: all 0.25s ease-out;
 }

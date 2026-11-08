@@ -1,11 +1,8 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
-import React from 'react';
-import { Flame } from 'lucide-react';
+import React, { useState } from 'react';
+import { Flame, ShoppingBag, Volume2, VolumeX } from 'lucide-react';
 import { SequenceStageInfo } from './SequenceScrollBackground.tsx';
+import { SunburstIcon, StickerTag } from './PosterOrnaments.tsx';
+import { sound } from '../utils/soundEffects.ts';
 
 interface NavbarProps {
   totalCartCount: number;
@@ -18,52 +15,60 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenCart,
   stageInfo,
 }) => {
+  const [isAudioEnabled, setIsAudioEnabled] = useState<boolean>(() => sound.isEnabled());
+
+  const handleToggleSound = () => {
+    const updated = sound.toggle();
+    setIsAudioEnabled(updated);
+  };
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 pointer-events-none px-6 sm:px-14 pt-6 pb-4">
-      <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-8">
-        {/* Zone 1: Unboxed Engraved Editorial Wordmark */}
+    <header className="fixed top-0 left-0 right-0 z-50 pointer-events-none px-4 sm:px-10 pt-5 pb-3">
+      <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-6">
+        {/* Zone 1: Brand Wordmark (Poster Brutal-Pop) */}
         <a
-          href="#anatomia"
-          className="pointer-events-auto flex items-center gap-3.5 group"
+          href="#topo"
+          className="pointer-events-auto flex items-center gap-3 group"
+          aria-label="Ir para o topo"
         >
-          <Flame className="w-4 h-4 text-[#E85D1A] fill-[#E85D1A]/80 group-hover:scale-110 transition-transform drop-shadow-[0_0_12px_rgba(232,93,26,0.9)]" />
+          <div className="relative flex items-center justify-center w-8 h-8 bg-[#8E6FD1] text-[#0D0814] border border-[#EDE3F7] shadow-[3px_3px_0px_#E0A95F] group-hover:rotate-6 transition-transform">
+            <Flame className="w-5 h-5 fill-current" />
+          </div>
+
           <div className="flex items-baseline gap-2">
-            <span className="font-cinzel font-extrabold text-lg sm:text-xl tracking-[0.26em] text-[#F4EFEA] drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]">
+            <span className="font-poster text-2xl sm:text-3xl tracking-[0.08em] uppercase text-[#EDE3F7] group-hover:text-[#8E6FD1] transition-colors drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
               OUTLAND
             </span>
-            <span className="font-editorial-serif italic font-normal text-base sm:text-lg text-[#F5A623] tracking-wide drop-shadow-[0_4px_14px_rgba(0,0,0,0.95)]">
-              Fire Grill
-            </span>
+            <StickerTag variant="pink" rotate="-rotate-2" className="text-[9px] py-0 px-1.5 hidden sm:inline-flex">
+              FIRE GRILL
+            </StickerTag>
           </div>
-          <span className="hidden lg:inline-block h-3.5 w-[1px] bg-[#F5A623]/35 mx-1" />
-          <span className="hidden lg:inline-block font-mono text-[10px] tracking-[0.22em] text-[#F4EFEA]/65 uppercase">
-            {stageInfo ? stageInfo.label : 'I · A Fachada'}
-          </span>
+
+          {stageInfo && (
+            <span className="hidden xl:inline-flex items-center gap-2 pl-3 ml-2 border-l-2 border-[#8E6FD1]/40 font-mono text-[10px] tracking-[0.2em] text-[#A797BD] uppercase">
+              <span className="w-1.5 h-1.5 bg-[#E0A95F]" />
+              {stageInfo.label}
+            </span>
+          )}
         </a>
 
-        {/* Zone 2: Pure Typographic Navigation (Zero Boxes, Diamond Separators & Golden Underline) */}
+        {/* Zone 2: Navigation Links Retangular com Sombra Chapada (Alinhado com o Telemetria) */}
         <nav
           aria-label="Navegação Principal"
-          className="pointer-events-auto hidden md:flex items-center gap-6"
+          className="pointer-events-auto hidden md:flex items-center gap-6 px-6 py-2.5 bg-[#160F22] border-2 border-[#8E6FD1] shadow-[4px_4px_0px_#8E6FD1] backdrop-blur-md"
         >
           {[
-            { href: '#anatomia', label: 'A Travessia' },
-            { href: '#monte-no-fogo', label: 'Bancada do Chef' },
+            { href: '#anatomia', label: '8 Camadas' },
+            { href: '#monte-no-fogo', label: 'Bancada' },
             { href: '#cardapio', label: 'Clássicos' },
             { href: '#sobre', label: 'A Brasa' },
           ].map((item, idx) => (
             <React.Fragment key={item.href}>
               {idx > 0 && (
-                <span
-                  aria-hidden="true"
-                  className="text-[8px] text-[#F5A623]/55 select-none"
-                >
-                  ◆
-                </span>
+                <SunburstIcon size={11} color="#E0A95F" spin={false} className="opacity-80" />
               )}
               <a
                 href={item.href}
-                className="relative py-1 font-cinzel text-[11px] font-semibold tracking-[0.24em] uppercase text-[#F4EFEA]/85 hover:text-[#F5A623] transition-colors drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)] after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[1px] after:bg-gradient-to-r after:from-[#E85D1A] after:to-[#F5A623] hover:after:w-full after:transition-all after:duration-300"
+                className="font-grotesk font-black text-xs tracking-[0.22em] uppercase text-[#EDE3F7] hover:text-[#8E6FD1] transition-colors"
               >
                 {item.label}
               </a>
@@ -71,26 +76,40 @@ export const Navbar: React.FC<NavbarProps> = ({
           ))}
         </nav>
 
-        {/* Zone 3: Unboxed Architectural Comanda Trigger */}
-        <div className="pointer-events-auto flex items-center gap-6 shrink-0">
+        {/* Zone 3: Sound Switch & Tactile Sticker Comanda Trigger */}
+        <div className="pointer-events-auto flex items-center gap-3 shrink-0">
+          <button
+            onClick={handleToggleSound}
+            className="px-2.5 py-2 bg-[#160F22] hover:bg-[#231636] text-[#EDE3F7] border-2 border-[#8E6FD1]/50 shadow-[3px_3px_0px_#8E6FD1] hover:shadow-[1px_1px_0px_#8E6FD1] hover:translate-x-[1px] hover:translate-y-[1px] transition-all cursor-pointer flex items-center gap-1.5"
+            title={isAudioEnabled ? 'Desativar som da grelha' : 'Ativar som da grelha'}
+            aria-label={isAudioEnabled ? 'Desativar som' : 'Ativar som'}
+          >
+            {isAudioEnabled ? (
+              <>
+                <Volume2 className="w-3.5 h-3.5 text-[#E0A95F] animate-pulse" />
+                <span className="hidden sm:inline font-mono text-[10px] font-bold text-[#E0A95F]">SOM ON</span>
+              </>
+            ) : (
+              <>
+                <VolumeX className="w-3.5 h-3.5 text-[#A797BD]" />
+                <span className="hidden sm:inline font-mono text-[10px] font-bold text-[#A797BD]">MUDO</span>
+              </>
+            )}
+          </button>
+
           <button
             onClick={onOpenCart}
-            className="group relative py-1 flex items-baseline gap-2.5 cursor-pointer text-left"
-            aria-label="Abrir comanda de pedidos"
+            className="group relative px-4 py-2 bg-[#160F22] hover:bg-[#8E6FD1] text-[#EDE3F7] hover:text-[#0D0814] border-2 border-[#8E6FD1] font-grotesk font-black text-xs uppercase tracking-[0.2em] shadow-[4px_4px_0px_#E0A95F] hover:shadow-[2px_2px_0px_#E0A95F] hover:translate-x-[2px] hover:translate-y-[2px] transition-all cursor-pointer flex items-center gap-2.5"
+            aria-label={`Comanda com ${totalCartCount} itens`}
           >
-            <span className="font-cinzel text-[11px] font-bold tracking-[0.26em] uppercase text-[#F4EFEA] group-hover:text-[#F5A623] transition-colors drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
-              Comanda
+            <ShoppingBag className="w-4 h-4 text-[#E0A95F] group-hover:text-[#0D0814] transition-colors" />
+            <span>COMANDA</span>
+            <span className="px-1.5 py-0.5 bg-[#FF4FA3] text-white text-[11px] font-mono font-bold leading-none tabular-nums shadow-[1px_1px_0px_#0D0814]">
+              {String(totalCartCount).padStart(2, '0')}
             </span>
-            <span className="font-editorial-serif italic text-base font-bold text-[#F5A623] group-hover:text-[#E85D1A] transition-colors tabular-nums">
-              /{String(totalCartCount).padStart(2, '0')}
-            </span>
-            <span className="absolute inset-x-0 bottom-0 h-[1px] bg-gradient-to-r from-[#F5A623]/70 via-[#E85D1A] to-transparent group-hover:from-[#E85D1A] group-hover:to-[#F5A623] transition-all" />
           </button>
         </div>
       </div>
-
-      {/* Delicate Center-Fading Brass Hairline */}
-      <div className="max-w-[1440px] mx-auto mt-4 h-[1px] hairline-gold-center opacity-45" />
     </header>
   );
 };

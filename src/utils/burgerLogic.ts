@@ -25,6 +25,40 @@ export interface BurgerStats {
   hasPatty: boolean;
 }
 
+export type MeatDoneness = 'rare' | 'medium' | 'well-done';
+
+export interface MeatDonenessOption {
+  id: MeatDoneness;
+  label: string;
+  temp: number;
+  badge: string;
+  desc: string;
+}
+
+export const MEAT_DONENESS_OPTIONS: MeatDonenessOption[] = [
+  {
+    id: 'rare',
+    label: 'Mal Passado',
+    temp: 52,
+    badge: '52°C',
+    desc: 'Centro vermelho rubi · Alta suculência',
+  },
+  {
+    id: 'medium',
+    label: 'Ao Ponto do Chef',
+    temp: 58,
+    badge: '58°C',
+    desc: 'Padrão da Casa · Rosa no centro e crosta Maillard',
+  },
+  {
+    id: 'well-done',
+    label: 'Bem Passado',
+    temp: 68,
+    badge: '68°C',
+    desc: 'Crosta dourada intensa · Cozimento completo',
+  },
+];
+
 export interface HeatIntensityProfile {
   /** Normalized intensity from 0.25 to 1.0 */
   intensityLevel: number;

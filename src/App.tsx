@@ -5,17 +5,19 @@
 
 import React, { useState } from 'react';
 import { Navbar } from './components/Navbar.tsx';
+import { PosterHero } from './components/PosterHero.tsx';
 import { BurgerExplodedScroll } from './components/BurgerExplodedScroll.tsx';
 import { BurgerCustomizer } from './components/BurgerCustomizer.tsx';
 import { BentoGridMenu } from './components/BentoGridMenu.tsx';
 import { Footer } from './components/Footer.tsx';
 import { CartDrawer, CartItem } from './components/CartDrawer.tsx';
+import { FloatingStickyCart } from './components/FloatingStickyCart.tsx';
 import {
   SequenceScrollBackground,
   SequenceStageInfo,
 } from './components/SequenceScrollBackground.tsx';
 import { MenuItem } from './data/menuItems.ts';
-import { IngredientItem, calculateBurgerStats } from './utils/burgerLogic.ts';
+import { IngredientItem, calculateBurgerStats, MeatDoneness } from './utils/burgerLogic.ts';
 
 export default function App() {
   const [cartItems, setCartItems] = useState<CartItem[]>([
@@ -39,6 +41,7 @@ export default function App() {
   });
 
   const totalCartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  const totalCartPrice = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
   // Add Menu item to cart
   const handleAddMenuItem = (item: MenuItem) => {
@@ -71,6 +74,7 @@ export default function App() {
     name: string;
     layers: IngredientItem[];
     stats: ReturnType<typeof calculateBurgerStats>;
+    meatDoneness?: MeatDoneness;
   }) => {
     setCartItems(prev => [
       ...prev,
@@ -83,6 +87,7 @@ export default function App() {
         calories: customOrder.stats.totalCalories,
         isCustom: true,
         layers: customOrder.layers,
+        meatDoneness: customOrder.meatDoneness,
       },
     ]);
     setIsCartOpen(true);
@@ -111,7 +116,7 @@ export default function App() {
   };
 
   return (
-    <div className="relative isolate min-h-screen bg-transparent text-[#F4EFEA] selection:bg-[#E85D1A] selection:text-white">
+    <div className="relative isolate min-h-screen bg-transparent text-[#EDE3F7] selection:bg-[#8E6FD1] selection:text-[#0D0814]">
       {/* BACKGROUND FIXO EM PLANO-SEQUÊNCIA (SCROLLYTELLING 4 ESTÁGIOS + VÍDEO FPV HABILITADO POR PADRÃO) */}
       <SequenceScrollBackground
         onStageChange={setStageInfo}
@@ -126,7 +131,10 @@ export default function App() {
       />
 
       <main className="relative z-10">
-        {/* HAMBÚRGUER QUE SE SEPARA NO SCROLL (145 FRAMES WEBP CALIBRADOS) */}
+        {/* ATO I: HERO POSTER EDITORIAL (ONDE A BRASA ENCONTRA O PÃO) */}
+        <PosterHero />
+
+        {/* ATO II & III: HAMBÚRGUER QUE SE SEPARA NO SCROLL (145 FRAMES WEBP CALIBRADOS) */}
         <BurgerExplodedScroll />
 
         {/* ESTÁGIO 4: MONTADOR INTERATIVO 3D NA BANCADA RÚSTICA DO CHEF */}
@@ -147,6 +155,14 @@ export default function App() {
         onRemoveItem={handleRemoveCartItem}
         onUpdateQuantity={handleUpdateQuantity}
         onClearCart={handleClearCart}
+      />
+
+      {/* Floating Sticky Mini-Comanda Trigger */}
+      <FloatingStickyCart
+        totalCartCount={totalCartCount}
+        totalPrice={totalCartPrice}
+        onOpenCart={() => setIsCartOpen(true)}
+        isCartOpen={isCartOpen}
       />
     </div>
   );

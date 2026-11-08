@@ -12,7 +12,7 @@ const frameUrls = Array.from(
 );
 
 export const BurgerExplodedScroll: React.FC<{ heightVh?: number; id?: string }> = ({
-  heightVh = 600,
+  heightVh = 240,
   id = 'anatomia',
 }) => {
   const ref = useRef<HTMLDivElement>(null);

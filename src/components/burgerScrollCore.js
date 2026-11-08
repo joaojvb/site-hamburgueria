@@ -1,3 +1,5 @@
+import { sound } from '../utils/soundEffects.ts';
+
 // Hambúrguer que se separa no scroll. Passe o mouse (ou toque) num ingrediente:
 // ele ganha destaque e uma seta curva mostra o que é.
 // Uso: const stop = initBurgerScroll(elemento, { frames: [urls...], heightVh: 600 });
@@ -18,8 +20,8 @@ export function initBurgerScroll(root, opts) {
   const KF = [0, 24, 44, 60, 84, 144];
   const KY = [[150,275,330,385,425,450,480,540],[103,228,285,350,395,425,440,508],[81,200,250,305,345,445,500,560],[105,205,255,322,358,457,535,588],[129,230,275,340,375,472,548,600],[134,230,275,340,372,475,553,600]];
   const KX = [.18, .25, .33, .38, .40, .40];
-  const FH = 647, LAST = 144, ANIM_END = 0.58, HOVER_FROM = 0.3;
-  // classes de cor usadas para achar o ingrediente sob o mouse e recortar o destaque
+  const FH = 647, LAST = 144, ANIM_END = 0.50, EXIT_START = 0.58, HOVER_FROM = 0.28;
+  // classes de cor usadas para achar o ingrediente sob o mouse
   const EXCL = { 0: [1, 2], 2: [1, 3], 4: [3, 2], 5: [3, 2], 7: [2] };
   const cls = (r, g, b) => (b > g + 8 && r > g + 25 && r > 90) ? 1 : (g > r * .95 && g > b + 25) ? 2 : (r > 185 && g > 112 && b < 100 && g > b + 55) ? 3 : 0;
 
@@ -63,7 +65,46 @@ export function initBurgerScroll(root, opts) {
   const bar = stick.querySelector('.bs-bar'), hint = stick.querySelector('.bs-hint'), det = stick.querySelector('.bs-detail');
   const base = document.createElement('canvas'), bctx = base.getContext('2d', { willReadFrequently: true }), mk = document.createElement('canvas');
   const NS = 'http://www.w3.org/2000/svg';
-  const imgs = frames.map(u => { const i = new Image(); i.src = u; return i; });
+  // Preload inteligente: prioriza os primeiros 28 frames e carrega os demais sob demanda ou em idle
+  const imgs = new Array(N);
+  const loadedSet = new Set();
+  for (let i = 0; i < N; i++) {
+    imgs[i] = new Image();
+  }
+  function loadFrame(idx) {
+    if (idx < 0 || idx >= N || loadedSet.has(idx)) return;
+    loadedSet.add(idx);
+    imgs[idx].src = frames[idx];
+  }
+  // Carga imediata do primeiro terço
+  for (let i = 0; i < Math.min(28, N); i++) {
+    loadFrame(i);
+  }
+  function preloadWindow(centerIdx) {
+    const rad = 14;
+    for (let r = 0; r <= rad; r++) {
+      loadFrame(centerIdx + r);
+      loadFrame(centerIdx - r);
+    }
+  }
+  if (typeof requestIdleCallback !== 'undefined') {
+    requestIdleCallback(() => {
+      let k = 0;
+      const interval = setInterval(() => {
+        if (!alive || loadedSet.size >= N) {
+          clearInterval(interval);
+          return;
+        }
+        for (let b = 0; b < 6 && k < N; b++, k++) {
+          loadFrame(k);
+        }
+      }, 50);
+    });
+  } else {
+    setTimeout(() => {
+      for (let i = 0; i < N; i++) loadFrame(i);
+    }, 450);
+  }
   const els = ITEMS.map((it) => {
     const card = document.createElement('div'); card.className = 'bs-card';
     card.innerHTML = `<span class="bs-num">${it[0]}</span><div class="bs-txt"><div class="bs-t">${it[1]}</div><div class="bs-s">${it[2]}</div><div class="bs-d">${it[3]}</div></div>`;
@@ -109,19 +150,37 @@ export function initBurgerScroll(root, opts) {
     if (b === 1) return near([0, 2]); if (b === 3) return near([2, 4]); if (b === 6) return near([5, 7]);
     return b;
   }
-  // recorta só o ingrediente destacado
+  // Recorte limpo e fotográfico com transição suave (feathering) nas bordas do ingrediente
   function maskOf(i, bands, rect, d) {
-    const [lo, hi] = bands[i], colr = i === 1 || i === 3 || i === 6;
-    const y0 = Math.max(0, Math.floor((colr ? lo - 45 : lo) * d)), y1 = Math.min(base.height, Math.ceil((colr ? hi + (i === 3 ? 70 : 45) : hi) * d));
-    const x0 = Math.max(0, Math.floor(rect.x * d)), x1 = Math.min(base.width, Math.ceil((rect.x + rect.w) * d)), w = x1 - x0, h = y1 - y0;
+    const [lo, hi] = bands[i];
+    const pad = 24;
+    const y0 = Math.max(0, Math.floor((lo - pad) * d));
+    const y1 = Math.min(base.height, Math.ceil((hi + pad) * d));
+    const x0 = Math.max(0, Math.floor(rect.x * d));
+    const x1 = Math.min(base.width, Math.ceil((rect.x + rect.w) * d));
+    const w = x1 - x0, h = y1 - y0;
     if (h <= 0 || w <= 0) return null;
-    const src = bctx.getImageData(x0, y0, w, h), dat = src.data, ex = EXCL[i] || [];
-    for (let p = 0; p < dat.length; p += 4) {
-      if (!dat[p + 3]) continue;
-      const c = cls(dat[p], dat[p + 1], dat[p + 2]); let keep;
-      if (i === 1) keep = c === 1; else if (i === 3) keep = c === 3; else if (i === 6) keep = c === 2;
-      else { const y = y0 + (((p >> 2) / w) | 0); keep = y >= lo * d && y < hi * d && ex.indexOf(c) < 0; }
-      if (!keep) dat[p + 3] = 0;
+    const src = bctx.getImageData(x0, y0, w, h), dat = src.data;
+    const feather = Math.max(6, 16 * d);
+    const topFeatherEnd = (lo * d) - y0 + feather;
+    const botFeatherStart = (hi * d) - y0 - feather;
+
+    for (let py = 0; py < h; py++) {
+      let alphaMult = 1;
+      if (py < topFeatherEnd && topFeatherEnd > 0) {
+        alphaMult = Math.max(0, py / topFeatherEnd);
+      } else if (py > botFeatherStart && h > botFeatherStart) {
+        alphaMult = Math.max(0, (h - py) / (h - botFeatherStart));
+      }
+      if (alphaMult < 1) {
+        const row = py * w * 4;
+        for (let px = 0; px < w; px++) {
+          const idx = row + px * 4 + 3;
+          if (dat[idx] > 0) {
+            dat[idx] = Math.round(dat[idx] * alphaMult);
+          }
+        }
+      }
     }
     mk.width = w; mk.height = h; mk.getContext('2d').putImageData(src, 0, 0);
     return { x: x0, y: y0 };
@@ -131,26 +190,58 @@ export function initBurgerScroll(root, opts) {
     cur += (target - cur) * 0.14;
     const p = cur, q = clamp(p / ANIM_END, 0, 1), f = q * LAST, idx = Math.round(q * (N - 1)), im = imgs[idx];
     const asp = (imgs[0].naturalWidth && imgs[0].naturalHeight) ? imgs[0].naturalWidth / imgs[0].naturalHeight : 565 / 647;
-    const rh = Math.min(H * .86, (W * .9) / asp), rw = rh * asp, rx = (W - rw) / 2, ry = (H - rh) / 2, d = cv.width / W;
+    const rh = Math.min(H * .86, (W * .9) / asp), rw = rh * asp, rx = (W - rw) / 2;
+    
+    // Translação do hambúrguer para cima com desfoque e opacidade diminuindo na saída
+    let exitY = 0;
+    let exitAlpha = 1;
+    let exitBlur = 0;
+    if (p > EXIT_START) {
+      const exitProgress = clamp((p - EXIT_START) / 0.28, 0, 1);
+      exitY = -Math.pow(exitProgress, 1.4) * (H * 1.25);
+      exitAlpha = Math.max(0, 1 - Math.pow(exitProgress, 1.8));
+      exitBlur = exitProgress * 22; // Aumenta o desfoque cinematográfico na subida
+    }
+    const ry = (H - rh) / 2 + exitY, d = cv.width / W;
     const fxl = interp(KX, f), ays = ITEMS.map((_, i) => ry + (interp(KY.map(r => r[i]), f) / FH) * rh), bands = bandsOf(ays, ry, rh);
+
+    stick.style.opacity = exitAlpha.toFixed(3);
+    stick.style.filter = exitBlur > 0.4 ? `blur(${exitBlur.toFixed(1)}px)` : 'none';
+    stick.style.pointerEvents = exitAlpha < 0.2 ? 'none' : '';
+    stick.style.visibility = exitAlpha <= 0.01 ? 'hidden' : 'visible';
+
     // 1) desenha o frame limpo numa tela auxiliar (usada para detectar o ingrediente)
-    const redraw = idx !== last;
+    preloadWindow(idx);
+    const redraw = idx !== last || exitY !== 0;
     if (redraw && im && im.naturalWidth) { bctx.clearRect(0, 0, base.width, base.height); bctx.drawImage(im, rx * d, ry * d, rw * d, rh * d); }
     // 2) qual ingrediente está sob o mouse / dedo?
     let h = null;
-    if (q > HOVER_FROM) {
+    if (q > HOVER_FROM && exitAlpha > 0.4) {
       if (tap && ptr) { sticky = hit(ptr.x, ptr.y, ays, bands); tap = false; }
       h = ptr && ptr.mouse ? hit(ptr.x, ptr.y, ays, bands) : sticky;
     } else sticky = null;
-    if (h !== null) fadeI = h;
+    if (h !== null) {
+      if (fadeI !== h) sound.playHover();
+      fadeI = h;
+    }
     hov = h; dim += ((h !== null ? 1 : 0) - dim) * 0.18; if (dim < .005) { dim = 0; if (h === null) fadeI = null; }
-    // 3) composição: frame + escurece o resto + brilho no ingrediente destacado
+    // 3) composição: frame + escurece o resto + brilho limpo no ingrediente destacado
     if (redraw || fadeI !== lastHov || Math.abs(dim - lastDim) > .004) {
       ctx.clearRect(0, 0, cv.width, cv.height); ctx.drawImage(base, 0, 0);
       if (fadeI !== null && dim > 0) {
-        ctx.save(); ctx.globalCompositeOperation = 'source-atop'; ctx.fillStyle = `rgba(0,0,0,${.6 * dim})`; ctx.fillRect(0, 0, cv.width, cv.height); ctx.restore();
+        ctx.save(); ctx.globalCompositeOperation = 'source-atop'; ctx.fillStyle = `rgba(0,0,0,${.55 * dim})`; ctx.fillRect(0, 0, cv.width, cv.height); ctx.restore();
         const m = maskOf(fadeI, bands, { x: rx, w: rw }, d);
-        if (m) { ctx.save(); ctx.globalAlpha = dim; ctx.shadowColor = 'rgba(255,140,40,.95)'; ctx.shadowBlur = 24 * d; try { ctx.filter = 'brightness(1.12) saturate(1.15)'; } catch (e) {} ctx.drawImage(mk, m.x, m.y); ctx.restore(); }
+        if (m) {
+          ctx.save();
+          ctx.globalAlpha = dim;
+          ctx.shadowColor = 'rgba(255, 185, 45, 0.95)';
+          ctx.shadowBlur = 24 * d;
+          ctx.drawImage(mk, m.x, m.y);
+          ctx.globalCompositeOperation = 'source-over';
+          ctx.globalAlpha = dim * 0.88;
+          ctx.drawImage(mk, m.x, m.y);
+          ctx.restore();
+        }
       }
       if (im && im.naturalWidth) last = idx; lastHov = fadeI; lastDim = dim;
     }
@@ -158,7 +249,7 @@ export function initBurgerScroll(root, opts) {
     // 4) etiqueta + seta curva do ingrediente destacado
     const mob = mobile(), cw = mob ? 36 : clamp(W * .22, 220, 290), pad = mob ? 8 : Math.max(16, W * .03);
     els.forEach((e, i) => {
-      vis[i] += ((h === i ? 1 : 0) - vis[i]) * 0.22; const v = vis[i];
+      vis[i] += ((h === i ? 1 : 0) - vis[i]) * 0.22; const v = vis[i] * exitAlpha;
       if (v < .01) { e.card.style.opacity = 0; e.g.style.display = 'none'; return; }
       const left = i % 2 === 0, dir = left ? 1 : -1, ax = rx + (left ? fxl : 1 - fxl) * rw, ay = ays[i];
       const edge = left ? rx + (fxl - .12) * rw - 26 : rx + (1 - fxl + .12) * rw + 26;
@@ -177,9 +268,11 @@ export function initBurgerScroll(root, opts) {
     });
     svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
     bar.style.width = p * 100 + '%';
+    bar.style.opacity = exitAlpha.toFixed(3);
     const ht = q < .55 ? 'Role para separar ↓' : (h === null ? 'Passe o mouse (ou toque) nas camadas' : '');
-    if (ht !== hintTxt) { hintTxt = ht; hint.textContent = ht; } hint.style.opacity = ht && p < .98 ? 1 : 0;
-    if (mob) { det.style.opacity = h !== null ? 1 : 0; if (h !== null) { det.firstChild.textContent = ITEMS[h][1]; det.lastChild.textContent = ITEMS[h][3]; } }
+    if (ht !== hintTxt) { hintTxt = ht; hint.textContent = ht; }
+    hint.style.opacity = (ht && p < EXIT_START + 0.04 && exitAlpha > 0.4) ? 1 : 0;
+    if (mob) { det.style.opacity = (h !== null && exitAlpha > 0.4) ? 1 : 0; if (h !== null) { det.firstChild.textContent = ITEMS[h][1]; det.lastChild.textContent = ITEMS[h][3]; } }
     raf = requestAnimationFrame(frame);
   }
   const pos = (ev) => { const r = stick.getBoundingClientRect(); return { x: ev.clientX - r.left, y: ev.clientY - r.top }; };
